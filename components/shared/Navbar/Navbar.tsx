@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import Theme from "./Theme";
 import GlobalSearch from "../Search/GlobalSearch";
+import MobileSidebar from "./MobileSidebar";
 
 export default function Navbar() {
   return (
@@ -23,17 +24,15 @@ export default function Navbar() {
       <GlobalSearch/>
 
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
       <Theme/>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
+        
 
         <SignedIn>
           <UserButton
             appearance={{
               elements: {
-                avatarBox: "h-10 w-10",
+                avatarBox: "h-8 w-8",
               },
               variables: {
                 colorPrimary: "#ff7000",
@@ -41,7 +40,9 @@ export default function Navbar() {
             }}
           />
         </SignedIn>
+      <MobileSidebar/>
       </div>
+
     </nav>
   );
 }

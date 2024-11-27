@@ -8,7 +8,7 @@ import MobileSidebar from "./MobileSidebar";
 
 export default function Navbar() {
   return (
-    <nav className="flex-between background-light900_dark200 p-6">
+    <nav className="flex-between fixed w-full background-light900_dark200 p-6 sm:px-12  shadow-light-300 dark:shadow-none z-50">
       <Link href={"/"} className="flex gap-1 items-center ">
         <Image
           src={"./assets/images/site-logo.svg"}
@@ -26,7 +26,6 @@ export default function Navbar() {
 
       <div className="flex gap-3">
       <Theme/>
-        
 
         <SignedIn>
           <UserButton
@@ -40,7 +39,9 @@ export default function Navbar() {
             }}
           />
         </SignedIn>
+
       <MobileSidebar/>
+      
       </div>
 
     </nav>

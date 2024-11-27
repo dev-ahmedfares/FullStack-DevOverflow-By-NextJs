@@ -19,9 +19,7 @@ import { usePathname } from "next/navigation";
 
 export default function MobileSidebar() {
   return (
-        <Sheet>
-    
-
+    <Sheet>
       <SheetTrigger asChild>
         <Image
           src="/assets/icons/hamburger.svg"
@@ -31,10 +29,10 @@ export default function MobileSidebar() {
           className="invert-colors cursor-pointer sm:hidden"
         />
       </SheetTrigger>
-      
+
       <SheetContent
         side={"left"}
-        className="h-dvh max-h-screen overflow-y-auto background-light900_dark200 border-none flex flex-col"
+        className="background-light900_dark200 flex h-dvh max-h-screen flex-col overflow-y-auto border-none"
       >
         <SheetTitle className="mt-4">
           <Link href="/" className="flex items-center gap-2">
@@ -56,25 +54,24 @@ export default function MobileSidebar() {
           </SheetClose>
         </div>
         <SignedOut>
-          <div className="flex flex-col gap-4 mt-auto">
+          <div className="mt-auto flex flex-col gap-4">
             <SheetClose asChild>
-                <Link href="/sign-in">
-                    <Button className="btn-secondary w-full rounded-lg px-4 py-3 min-h-[41px] small-medium shadow-none">
-                        <span className="primary-text-gradient">Log In</span>
-                    </Button>
-                </Link>
+              <Link href="/sign-in">
+                <Button className="btn-secondary small-medium min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+                  <span className="primary-text-gradient">Log In</span>
+                </Button>
+              </Link>
             </SheetClose>
             <SheetClose asChild>
-                <Link href="/sign-up">
-                    <Button className="btn-tertiary light-border-2 text-dark400_light900 w-full rounded-lg px-4 py-3 min-h-[41px] small-medium shadow-none">
-                        Sign Up         
-                    </Button>
-                </Link>
+              <Link href="/sign-up">
+                <Button className="btn-tertiary light-border-2 text-dark400_light900 small-medium min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+                  Sign Up
+                </Button>
+              </Link>
             </SheetClose>
           </div>
         </SignedOut>
       </SheetContent>
-      
     </Sheet>
   );
 }
@@ -88,6 +85,7 @@ const NavContent = () => {
         const isActive =
           pathname === link.route ||
           (pathname.includes(link.route) && link.route.length > 1);
+
         return (
           <Link
             key={link.imgURL}

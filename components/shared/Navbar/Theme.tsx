@@ -18,7 +18,7 @@ export default function Theme() {
   return (
     <Menubar className="relative border-none bg-transparent shadow-none me-[-10px]">
       <MenubarMenu>
-        <MenubarTrigger className="focus:bg-light-900 data-[state=open]:bg-light-900 dark:focus:bg-dark-200 dark:data-[state=open]:bg-dark-200">
+        <MenubarTrigger className="focus:bg-light-900 cursor-pointer data-[state=open]:bg-light-900 dark:focus:bg-dark-200 dark:data-[state=open]:bg-dark-200">
           {mode === "dark" ? (
             <Image
               src={"/assets/icons/moon.svg"}

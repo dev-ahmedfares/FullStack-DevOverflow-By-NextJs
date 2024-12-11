@@ -31,7 +31,7 @@ export default function ThemeProvider({
   };
   
   useEffect(() =>{ handleThemeChange()}, [mode]);
-console.log(mode)
+
   return (
     <ThemeContext.Provider value={{ mode, setMode }}>
       {children}

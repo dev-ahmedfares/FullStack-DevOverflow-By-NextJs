@@ -21,6 +21,7 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { useState } from "react";
 import { useTheme } from "@/context/ThemeProvider";
+import { createQuestion } from "@/lib/actions/question.action";
 
 export default function Question({ type }: { type: string }) {
     const {mode} = useTheme()
@@ -38,8 +39,8 @@ export default function Question({ type }: { type: string }) {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof QuestionValidation>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof QuestionValidation>) {
+    await createQuestion({})
   }
 
   const handleInputKeyDown = (
@@ -60,7 +61,7 @@ export default function Question({ type }: { type: string }) {
           });
         }
 
-        if (!field.value.includes(tagValue as never)) {
+        if (!field.value.includes(tagValue)) {
           form.setValue("tags", [...field.value, tagValue]);
           tagInput.value = "";
           form.clearErrors("tags");
@@ -117,6 +118,8 @@ export default function Question({ type }: { type: string }) {
                 <Editor
                 apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                 // TODO : Add On blur and and onEditedChange
+                onBlur={field.onBlur}
+                onEditorChange={field.onChange}
                   onInit={(evt, editor) => (
                     // @ts-ignore
                     editorRef.current = editor)}

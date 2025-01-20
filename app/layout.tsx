@@ -1,9 +1,10 @@
+/* eslint-disable camelcase */
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
+  // SignInButton,
+  // SignedIn,
+  // SignedOut,
+  // UserButton,
 } from "@clerk/nextjs";
 import "./globals.css";
 import React from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,16 +19,19 @@ import { Input } from "@/components/ui/input";
 import { QuestionValidation } from "@/lib/validation";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { useState } from "react";
 import { useTheme } from "@/context/ThemeProvider";
 import { createQuestion } from "@/lib/actions/question.action";
-import { format } from "path";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { usePathname, useRouter } from "next/navigation";
-import { type } from "os";
 
-export default function Question({ mongoUserId,type }: { mongoUserId: string,type?:string }) {
-  const router = useRouter()
+export default function Question({
+  mongoUserId,
+  type,
+}: {
+  mongoUserId: string;
+  type?: string;
+}) {
+  const router = useRouter();
   const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef<TinyMCEEditor | null>(null);
@@ -45,22 +48,22 @@ export default function Question({ mongoUserId,type }: { mongoUserId: string,typ
 
   async function onSubmit(values: z.infer<typeof QuestionValidation>) {
     setIsSubmitting(true);
-    
+
     try {
       await createQuestion({
         title: values.title,
         content: values.explanation,
         tags: values.tags,
-        author:JSON.parse(mongoUserId),
+        author: JSON.parse(mongoUserId),
         path: pathname,
       });
 
-      router.push("/")
+      router.push("/");
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   }
 
   const handleInputKeyDown = (
@@ -146,7 +149,7 @@ export default function Question({ mongoUserId,type }: { mongoUserId: string,typ
                       field.onChange(plainText);
                     }
                   }}
-                  onEditorChange={(content) => {
+                  onEditorChange={() => {
                     if (editorRef.current) {
                       const plainText = editorRef.current.getContent({
                         format: "text",

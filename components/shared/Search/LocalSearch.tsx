@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function LocalSearch({
-  route,
+  // route,
   iconPosition = "left",
   imgSrc,
   placeholder,

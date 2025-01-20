@@ -63,7 +63,7 @@ export const createQuestion = async (params: ICreateQuestionParams) => {
   }
 };
 
-export const getQuestions = async (params: IGetQuestionsParams) => {
+export const getQuestions = async () => {
   try {
     connectToDatabase();
 

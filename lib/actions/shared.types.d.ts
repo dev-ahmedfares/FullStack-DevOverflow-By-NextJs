@@ -9,6 +9,6 @@ export interface ICreateQuestionParams {
   path: string;
 }
 
-export interface IGetQuestionsParams {
-  
-}
+// export interface IGetQuestionsParams {
+//   page_size:
+// }

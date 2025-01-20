@@ -20,10 +20,10 @@ export async function getUserById(params: {id:string}) {
 export async function createUser(userData:ICreateUserParams) {
   try {
     connectToDatabase()
+    console.log("From create User action")
+    const mongoUser =  await User.create(userData)
 
-    const newUser =  await User.create(userData)
-
-    return newUser
+    return mongoUser
   } catch (error) {
     console.log(error)
     throw error

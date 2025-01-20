@@ -3,6 +3,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser } from "@/lib/actions/user.action";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
   }
 
   const eventType = evt.type;
-  console.log("outside",eventType)
+  console.log("outsideyrtjjrt rjtjtrjjrtjrtjtrtrj")
   if (eventType === "user.created") {
       console.log("inside",eventType)
       const { id, email_addresses, image_url, username, first_name, last_name } =
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
       name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
     });
 
-    return mongoUser
+    return NextResponse.json({message:'OK',user:mongoUser})
   }
 
   return new Response("Webhook received", { status: 200 });

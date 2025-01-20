@@ -27,7 +27,7 @@ import { Editor as TinyMCEEditor } from "tinymce";
 import { usePathname, useRouter } from "next/navigation";
 import { type } from "os";
 
-export default function Question({ mongoUserId }: { mongoUserId: string }) {
+export default function Question({ mongoUserId,type }: { mongoUserId: string,type?:string }) {
   const router = useRouter()
   const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);

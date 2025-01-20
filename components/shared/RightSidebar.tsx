@@ -45,6 +45,7 @@ export default function RightSidebar() {
         <div className="mt-7 flex flex-col gap-6">
           {TopQuestions.map((question) => (
             <Link
+            key={question._id}
               href={`/questions/${question._id}`}
               className="flex items-center justify-between gap-7"
             >

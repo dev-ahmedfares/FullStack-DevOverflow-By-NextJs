@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const { questions } = await getQuestions();
-  console.log(questions);
+  
   return (
     <>
       <div className="flex flex-col-reverse justify-between sm:flex-row">

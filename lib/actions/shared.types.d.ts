@@ -9,14 +9,21 @@ export interface ICreateQuestionParams {
   path: string;
 }
 
-// export interface IGetQuestionsParams {
-//   page_size:
-// }
-
 export interface ICreateUserParams {
   clerkId: string;
   name: string;
   username: string;
   email: string;
   picture: string;
+}
+
+export interface IUpdateUserParams {
+  clerkId: string;
+  userData: {
+    name: string;
+    username: string;
+    email: string;
+    picture: string;
+  };
+  path: string;
 }

@@ -12,3 +12,11 @@ export interface ICreateQuestionParams {
 // export interface IGetQuestionsParams {
 //   page_size:
 // }
+
+export interface ICreateUserParams {
+  clerkId: string;
+  name: string;
+  username: string;
+  email: string;
+  picture: string;
+}

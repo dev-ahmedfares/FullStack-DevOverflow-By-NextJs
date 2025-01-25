@@ -27,3 +27,10 @@ export interface IUpdateUserParams {
   };
   path: string;
 }
+
+export interface IGetAllUsersParams {
+  page?: number;
+  pageSize?: number;
+  searchQuery?: string;
+  filter?: string;
+}

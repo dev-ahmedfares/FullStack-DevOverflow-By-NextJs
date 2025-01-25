@@ -1,8 +1,25 @@
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
-import { ICreateUserParams, IUpdateUserParams } from "./shared.types";
+import {
+  ICreateUserParams,
+  IGetAllUsersParams,
+  IUpdateUserParams,
+} from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+
+export async function getAllUsers(params: IGetAllUsersParams) {
+  try {
+    connectToDatabase();
+    // const {page,pageSize,filter,searchQuery} = params
+    const users = await User.find({}).sort({ createdAt: -1 });
+
+    return { users };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 export async function getUserById(params: { id: string }) {
   try {
@@ -65,15 +82,14 @@ export async function deleteUser(clerkId: string) {
     // );
 
     // For delete all question related with this user id
-    await Question.deleteMany({author:user._id})
+    await Question.deleteMany({ author: user._id });
 
     // TODO Delete answers, comments user
 
-
     // Delete user
-    const deletedUser = await User.findByIdAndDelete(user._id)
+    const deletedUser = await User.findByIdAndDelete(user._id);
 
-    return deletedUser
+    return deletedUser;
   } catch (error) {
     console.log(error);
     throw error;

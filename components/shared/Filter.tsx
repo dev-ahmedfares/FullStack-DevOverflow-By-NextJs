@@ -9,7 +9,7 @@ import {
 
 interface Props {
   filters: { name: string; value: string }[];
-  containerClasses: string;
+  containerClasses?: string;
   otherClasses: string;
 }
 

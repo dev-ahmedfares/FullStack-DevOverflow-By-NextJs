@@ -34,3 +34,15 @@ export interface IGetAllUsersParams {
   searchQuery?: string;
   filter?: string;
 }
+
+export interface IGetTopInteractedTagsParams {
+  userId: string;
+  limit?:number
+}
+
+export interface IGetAllTagsParams {
+  page?:number,
+  pageSize?:number,
+  searchQuery?:string,
+  filter?:string
+}

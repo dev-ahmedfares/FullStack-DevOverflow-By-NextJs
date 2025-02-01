@@ -16,7 +16,8 @@ export default async function Page() {
 
       <div className="mt-11 flex flex-1 justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
-          route="/"
+          route="/community"
+          iconPosition="left"
           placeholder="Search for amazing minds"
           imgSrc="/assets/icons/search.svg"
           otherClasses="flex-1"
@@ -26,7 +27,7 @@ export default async function Page() {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-      <div className="mt-12">
+      <div className="mt-12 flex flex-wrap gap-4">
         {users.length > 0 ? (
           users.map((user) => <UserCard key={user._id} user={user} />)
         ) : (

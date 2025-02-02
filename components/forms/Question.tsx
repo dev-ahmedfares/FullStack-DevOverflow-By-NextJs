@@ -142,23 +142,26 @@ export default function Question({
               <FormControl className="mt-3.5">
                 <Editor
                   apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                  onBlur={() => {
-                    if (editorRef.current) {
-                      const plainText = editorRef.current.getContent({
-                        format: "text",
-                      });
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
+                  // To Get Text only without HTML Element Parsing
+                  // onBlur={() => {
+                  //   if (editorRef.current) {
+                  //     const plainText = editorRef.current.getContent({
+                  //       format: "text",
+                  //     });
 
-                      field.onChange(plainText);
-                    }
-                  }}
-                  onEditorChange={() => {
-                    if (editorRef.current) {
-                      const plainText = editorRef.current.getContent({
-                        format: "text",
-                      });
-                      field.onChange(plainText);
-                    }
-                  }}
+                  //     field.onChange(plainText);
+                  //   }
+                  // }}
+                  // onEditorChange={() => {
+                  //   if (editorRef.current) {
+                  //     const plainText = editorRef.current.getContent({
+                  //       format: "text",
+                  //     });
+                  //     field.onChange(plainText);
+                  //   }
+                  // }}
                   onInit={(evt, editor) =>
                     // @ts-ignore
                     (editorRef.current = editor)

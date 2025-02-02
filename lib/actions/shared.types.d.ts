@@ -37,12 +37,16 @@ export interface IGetAllUsersParams {
 
 export interface IGetTopInteractedTagsParams {
   userId: string;
-  limit?:number
+  limit?: number;
 }
 
 export interface IGetAllTagsParams {
-  page?:number,
-  pageSize?:number,
-  searchQuery?:string,
-  filter?:string
+  page?: number;
+  pageSize?: number;
+  searchQuery?: string;
+  filter?: string;
+}
+
+export interface IGetQuestionById {
+  questionId: string;
 }

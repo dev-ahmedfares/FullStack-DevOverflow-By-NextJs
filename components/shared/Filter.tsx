@@ -10,7 +10,7 @@ import {
 interface Props {
   filters: { name: string; value: string }[];
   containerClasses?: string;
-  otherClasses: string;
+  otherClasses?: string;
 }
 
 export default function Filter({

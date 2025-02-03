@@ -19,5 +19,5 @@ export const QuestionValidation = z.object({
 });
 
 export const AnswerSchema = z.object({
-  answer: z.string().min(100),
+  answer: z.string().min(100,{message:"Answer must be at least 100 characters"}),
 });

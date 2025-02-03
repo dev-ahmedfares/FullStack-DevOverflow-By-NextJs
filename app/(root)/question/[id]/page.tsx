@@ -1,15 +1,26 @@
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { getQuestionById } from "@/lib/actions/question.action";
+import { getFormattedNumber, getTimestamp } from "@/lib/utils";
+import { URLProps } from "@/types";
 import Answer from "@/components/forms/Answer";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
-import { getQuestionById } from "@/lib/actions/question.action";
-import { getFormattedNumber, getTimestamp } from "@/lib/utils";
-import { URLProps } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import { auth } from "@clerk/nextjs/server";
+import { getUserById } from "@/lib/actions/user.action";
+import AllAnswers from "@/components/shared/AllAnswers";
 
 async function Page({ params, searchParams }: URLProps) {
+  const { userId: clerkId } = await auth();
+
+  // TODO if user not sign in what must happen??
+  let mongoUser;
+  if (clerkId) {
+    mongoUser = await getUserById({ id: clerkId });
+  }
+
   const question = await getQuestionById({ questionId: params.id });
 
   return (
@@ -77,7 +88,18 @@ async function Page({ params, searchParams }: URLProps) {
       </div>
 
       <div>
-        <Answer/>
+        <AllAnswers
+          questionId={params.id}
+          userId={JSON.stringify(mongoUser._id)}
+        />
+      </div>
+
+      <div>
+        <Answer
+          authorId={JSON.stringify(mongoUser._id)}
+          questionId={JSON.stringify(question._id)}
+          question={question.content}
+        />
       </div>
     </div>
   );

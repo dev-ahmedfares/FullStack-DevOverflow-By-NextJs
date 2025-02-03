@@ -50,3 +50,17 @@ export interface IGetAllTagsParams {
 export interface IGetQuestionById {
   questionId: string;
 }
+
+export interface ICreateAnswerProps {
+  content: string;
+  author: string; // User ID
+  question: string; // QuestionID
+  path: string;
+}
+
+export interface IGetAllAnswersParams {
+  questionId: string;
+  sortBy?: string;
+  page?: number;
+  pageSize?: number;
+}

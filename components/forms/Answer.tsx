@@ -9,7 +9,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "../ui/form";
 import { Editor as TinyMCEEditor } from "tinymce";
@@ -17,12 +16,20 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { usePathname } from "next/navigation";
 
-function Answer() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+interface Props {
+  questionId: string;
+  authorId: string;
+  question: string;
+}
 
+function Answer({ questionId, authorId, question }: Props) {
   const { mode } = useTheme();
+  const pathname = usePathname();
   const editorRef = useRef<TinyMCEEditor | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -31,8 +38,28 @@ function Answer() {
     },
   });
 
-  const handleAddAnswer = (values: z.infer<typeof AnswerSchema>) => {
-    console.log(values);
+  const handleAddAnswer = async (values: z.infer<typeof AnswerSchema>) => {
+    console.log(questionId);
+    setIsSubmitting(true);
+    try {
+      await createAnswer({
+        content: values.answer,
+        question: JSON.parse(questionId),
+        author: JSON.parse(authorId),
+        path: pathname,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent("");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

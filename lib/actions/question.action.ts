@@ -1,7 +1,11 @@
 "use server";
 import Question from "@/database/question.model";
 import { connectToDatabase } from "../mongoose";
-import { ICreateQuestionParams, IGetQuestionById } from "./shared.types";
+import {
+  ICreateQuestionParams,
+  IGetQuestionById,
+  IVoteQuestionParams,
+} from "./shared.types";
 import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -93,7 +97,73 @@ export const getQuestionById = async ({ questionId }: IGetQuestionById) => {
         select: "_id clerkId name picture",
       });
 
-    return question ;
+    return question;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const upVoteQuestion = async (params: IVoteQuestionParams) => {
+  try {
+    connectToDatabase();
+
+    const { questionId, hasDownVoted, hasUpVoted, userId, path } = params;
+
+    let updateQuery = {};
+
+    if (hasUpVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasDownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("No question found");
+    }
+
+    // TODO add reputation for user points +/-
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const downVoteQuestion = async (params: IVoteQuestionParams) => {
+  try {
+    connectToDatabase();
+
+    const { questionId, hasDownVoted, hasUpVoted, userId, path } = params;
+
+    let updateQuery = {};
+
+    if (hasDownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasUpVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+
+    await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
+
+    // TODO add reputation for user points +/-
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;

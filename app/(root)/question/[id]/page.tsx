@@ -11,6 +11,7 @@ import RenderTag from "@/components/shared/RenderTag";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/actions/user.action";
 import AllAnswers from "@/components/shared/AllAnswers";
+import Votes from "@/components/shared/Votes";
 
 async function Page({ params, searchParams }: URLProps) {
   const { userId: clerkId } = await auth();
@@ -22,11 +23,12 @@ async function Page({ params, searchParams }: URLProps) {
   }
 
   const question = await getQuestionById({ questionId: params.id });
+  console.log(question);
 
   return (
     <div>
       <div>
-        <div className="flex flex-col-reverse justify-between sm:flex-row sm:items-center">
+        <div className="flex flex-col-reverse justify-between max-sm:gap-2 sm:flex-row sm:items-center">
           <Link
             className="flex items-center gap-2"
             href={`/profile/${question.author.clerkId}`}
@@ -42,7 +44,18 @@ async function Page({ params, searchParams }: URLProps) {
               {question.author.name}
             </p>
           </Link>
-          <div className="text-dark300_light700 flex justify-end">VOTING</div>
+          <div className="flex justify-end">
+            <Votes
+              type="Question"
+              itemId={JSON.stringify(question._id)}
+              userId={JSON.stringify(mongoUser._id)}
+              hasDownVoted={question.downvotes.includes(mongoUser._id)}
+              hasUpVoted={question.upvotes.includes(mongoUser._id)}
+              upvotes={question.upvotes.length}
+              downvotes={question.downvotes.length}
+              hasSaved={mongoUser?.saved.includes(question._id)}
+            />
+          </div>
         </div>
 
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
@@ -88,10 +101,7 @@ async function Page({ params, searchParams }: URLProps) {
       </div>
 
       <div>
-        <AllAnswers
-          questionId={params.id}
-          userId={JSON.stringify(mongoUser._id)}
-        />
+        <AllAnswers questionId={params.id} userId={mongoUser._id} />
       </div>
 
       <div>

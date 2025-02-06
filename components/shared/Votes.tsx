@@ -1,0 +1,148 @@
+"use client";
+import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
+import {
+  downVoteQuestion,
+  upVoteQuestion,
+} from "@/lib/actions/question.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+
+interface Props {
+  type: "Question" | "Answer";
+  itemId: string;
+  userId: string;
+  upvotes: number;
+  downvotes: number;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
+  hasSaved?: boolean;
+}
+
+function Votes({
+  downvotes,
+  hasDownVoted,
+  hasUpVoted,
+  itemId,
+  type,
+  upvotes,
+  userId,
+  hasSaved,
+}: Props) {
+  const pathname = usePathname();
+  const router = useRouter();
+  
+  const handleSave = async () => {
+    await toggleSaveQuestion({
+      path: pathname,
+      questionId: JSON.parse(itemId),
+      userId: JSON.parse(userId),
+    });
+
+    // TODO ADD Toast it save or not
+  };
+
+  const handleVote = async (action: string) => {
+    // TODO Check if sign in and show toast
+    if (type === "Question") {
+      if (action === "upvote") {
+        await upVoteQuestion({
+          questionId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasDownVoted,
+          hasUpVoted,
+          path: pathname,
+        });
+      } else {
+        await downVoteQuestion({
+          questionId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasDownVoted,
+          hasUpVoted,
+          path: pathname,
+        });
+      }
+    }
+
+    if (type === "Answer") {
+      if (action === "upvote") {
+        await upVoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasDownVoted,
+          hasUpVoted,
+          path: pathname,
+        });
+      } else {
+        await downVoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasDownVoted,
+          hasUpVoted,
+          path: pathname,
+        });
+      }
+    }
+
+    // TODO Show toast message
+  }
+
+  
+  return (
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <Image
+            src={
+              hasUpVoted
+                ? "/assets/icons/upvoted.svg"
+                : "/assets/icons/upvote.svg"
+            }
+            alt="upvote"
+            height={18}
+            width={18}
+            className="cursor-pointer"
+            onClick={() => handleVote("upvote")}
+          />
+          <div className="flex-center background-light700_dark400 min-w-[18px] rounded-sm p-1">
+            <p className="subtle-medium text-dark400_light900">{upvotes}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <Image
+            src={
+              hasDownVoted
+                ? "/assets/icons/downvoted.svg"
+                : "/assets/icons/downvote.svg"
+            }
+            alt="upvote"
+            height={18}
+            width={18}
+            className="cursor-pointer"
+            onClick={() => handleVote("downvote")}
+          />
+          <div className="flex-center background-light700_dark400 min-w-[18px] rounded-sm p-1">
+            <p className="subtle-medium text-dark400_light900">{downvotes}</p>
+          </div>
+        </div>
+      </div>
+      {type === "Question" && (
+        <Image
+          alt="star"
+          width={18}
+          height={18}
+          src={
+            hasSaved
+              ? "/assets/icons/star-filled.svg"
+              : "/assets/icons/star-red.svg"
+          }
+          className="cursor-pointer"
+          onClick={handleSave}
+        />
+      )}
+    </div>
+  );
+}
+
+export default Votes;

@@ -64,3 +64,33 @@ export interface IGetAllAnswersParams {
   page?: number;
   pageSize?: number;
 }
+
+export interface IVoteQuestionParams {
+  questionId: string;
+  userId: string;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
+  path: string;
+}
+
+export interface IAnswerVoteParams {
+  answerId: string;
+  userId: string;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
+  path: string;
+}
+
+export interface IToggleSaveQuestionParams {
+  userId: string;
+  questionId: string;
+  path: string;
+}
+
+export interface IGetSavedQuestionsParams {
+  clerkId: string;
+  page?: number;
+  pageSize?: number;
+  filter?: string;
+  searchQuery?: string;
+}

@@ -13,8 +13,8 @@ type TProps = {
     name: string;
     picture: string;
   };
-  upvotes: number;
-  views: number;
+  upvotes: number[];
+  views: number[];
   answers: Array<object>;
   createdAt: Date;
   clerkId?: string | null;
@@ -68,7 +68,7 @@ export default function QuestionCard({
           <Metric
             imgUrl="/assets/icons/like.svg"
             alt="upvotes"
-            value={getFormattedNumber(upvotes)}
+            value={getFormattedNumber(upvotes.length)}
             title="Votes"
             textStyles="small-medium text-dark400_light800"
           />

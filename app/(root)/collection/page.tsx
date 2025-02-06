@@ -1,34 +1,23 @@
 import QuestionCard from "@/components/cards/QuestionCard";
-import HomeFilter from "@/components/Home/HomeFilter";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
-import { Button } from "@/components/ui/button";
-import { HomePageFilters } from "@/constants/filter";
-import { getQuestions } from "@/lib/actions/question.action";
-import { Metadata } from "next";
-import Link from "next/link";
-import React from "react";
-
-export const metadata: Metadata = {
-  title: `Home | DevOverflow`,
-  description: "Home page of DevOverflow",
-};
+import {  QuestionFilters } from "@/constants/filter";
+import { getSavedQuestions } from "@/lib/actions/user.action";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 
-export default async function Home() {
-  const { questions } = await getQuestions();
-  
+export default async function Collection() {
+  const { userId } = await auth();
+
+  if (!userId) redirect("/sign-in");
+
+  const { questions } = await getSavedQuestions({ clerkId: userId });
+  console.log(questions)
   return (
     <>
-      <div className="flex flex-col-reverse justify-between sm:flex-row">
-        <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-        <Link href="/ask-question" className="ms-auto">
-          <Button className="primary-gradient min-h-[46px] !text-light-900">
-            Ask a Question
-          </Button>
-        </Link>
-      </div>
+      <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-11 flex flex-1 justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
@@ -38,13 +27,10 @@ export default async function Home() {
           otherClasses="flex-1"
         />
         <Filter
-          filters={HomePageFilters}
-          containerClasses="hidden max-md:flex"
+          filters={QuestionFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-
-      <HomeFilter />
 
       <div className="mt-10 flex flex-col gap-6">
         {questions.length > 0 ? (
@@ -63,7 +49,7 @@ export default async function Home() {
           ))
         ) : (
           <NoResult
-            title="There are no question to show"
+            title="There are no question saved to show"
             description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
         discussion. our query could be the next big thing others learn from. Get
         involved! 💡"

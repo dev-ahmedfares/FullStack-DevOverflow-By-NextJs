@@ -1,5 +1,6 @@
 "use client";
 import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
+import { viewsQuestion } from "@/lib/actions/interaction.action";
 import {
   downVoteQuestion,
   upVoteQuestion,
@@ -7,6 +8,8 @@ import {
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { undefined } from "zod";
 
 interface Props {
   type: "Question" | "Answer";
@@ -31,7 +34,7 @@ function Votes({
 }: Props) {
   const pathname = usePathname();
   const router = useRouter();
-  
+  console.log(router);
   const handleSave = async () => {
     await toggleSaveQuestion({
       path: pathname,
@@ -85,8 +88,16 @@ function Votes({
     }
 
     // TODO Show toast message
-  }
+  };
 
+  // TODO and the end of project i guess this useEffect must be in question/[id] page not here
+  // because problem of double increase that happen
+  useEffect(() => {
+    viewsQuestion({
+      userId: userId ? JSON.parse(userId) : undefined,
+      questionId: JSON.parse(itemId),
+    });
+  }, [pathname, router, userId, itemId]);
   
   return (
     <div className="flex items-center gap-4">

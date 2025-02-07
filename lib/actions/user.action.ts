@@ -12,6 +12,7 @@ import {
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
+import { FilterQuery } from "mongoose";
 
 export async function getAllUsers(params: IGetAllUsersParams) {
   try {
@@ -143,7 +144,7 @@ export async function getSavedQuestions(params: IGetSavedQuestionsParams) {
 
     // TODO Add pagination
 
-    const query = searchQuery
+    const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
 
@@ -165,7 +166,6 @@ export async function getSavedQuestions(params: IGetSavedQuestionsParams) {
       throw new Error("User not found");
     }
 
-    
     const savedQuestions = user.saved;
 
     // TODO pagination NEXT

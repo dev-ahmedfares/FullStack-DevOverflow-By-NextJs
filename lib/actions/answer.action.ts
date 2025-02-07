@@ -56,7 +56,7 @@ export async function upVoteAnswer(params: IAnswerVoteParams) {
     connectToDatabase();
     const { answerId, hasDownVoted, hasUpVoted, userId, path } = params;
 
-    let updateQuery;
+    let updateQuery = {};
     if (hasUpVoted) {
       updateQuery = {
         $pull: {
@@ -85,10 +85,10 @@ export async function upVoteAnswer(params: IAnswerVoteParams) {
     });
 
     if (!answer) {
-      throw new Error("Answer not found")
+      throw new Error("Answer not found");
     }
     //  TODO increment user Reputation
-    revalidatePath(path)
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
@@ -100,7 +100,7 @@ export async function downVoteAnswer(params: IAnswerVoteParams) {
     connectToDatabase();
     const { answerId, hasDownVoted, hasUpVoted, userId, path } = params;
 
-    let updateQuery;
+    let updateQuery = {};
     if (hasDownVoted) {
       updateQuery = {
         $pull: {
@@ -129,11 +129,11 @@ export async function downVoteAnswer(params: IAnswerVoteParams) {
     });
 
     if (!answer) {
-      throw new Error("Answer not found")
+      throw new Error("Answer not found");
     }
     //  TODO increment user Reputation
-    
-    revalidatePath(path)
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;

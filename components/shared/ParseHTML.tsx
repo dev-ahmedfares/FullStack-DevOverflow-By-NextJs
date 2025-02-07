@@ -26,18 +26,18 @@ import "prismjs/components/prism-mongodb";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 
-
 interface Props {
   data: string;
 }
 
 function ParseHTML({ data }: Props) {
-  
   useEffect(() => {
     Prism.highlightAll();
   }, []);
 
-  return <div className="markdown w-full min-w-full">{parse(data)}</div>;
+  return (
+    <div className="markdown w-full min-w-full ">{parse(data)}</div>
+  );
 }
 
 export default ParseHTML;

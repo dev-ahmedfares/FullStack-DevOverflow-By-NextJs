@@ -13,7 +13,11 @@ import { getUserById } from "@/lib/actions/user.action";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
 
+
+
 async function Page({ params, searchParams }: URLProps) {
+  const {id} = await params
+  
   const { userId: clerkId } = await auth();
 
   // TODO if user not sign in what must happen??
@@ -22,8 +26,9 @@ async function Page({ params, searchParams }: URLProps) {
     mongoUser = await getUserById({ id: clerkId });
   }
 
-  const question = await getQuestionById({ questionId: params.id });
-  console.log(question);
+  
+  const question = await getQuestionById({ questionId: id });
+  
 
   return (
     <div>
@@ -101,7 +106,7 @@ async function Page({ params, searchParams }: URLProps) {
       </div>
 
       <div>
-        <AllAnswers questionId={params.id} userId={mongoUser._id} />
+        <AllAnswers questionId={id} userId={mongoUser._id} />
       </div>
 
       <div>

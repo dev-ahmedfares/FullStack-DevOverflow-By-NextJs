@@ -94,3 +94,15 @@ export interface IGetSavedQuestionsParams {
   filter?: string;
   searchQuery?: string;
 }
+
+export interface IViewsQuestionParams {
+  userId: string | undefined;
+  questionId: string;
+}
+
+export interface IGetQuestionsByTagId {
+  tagId: string;
+  page?: number;
+  pageSize?: number;
+  searchQuery?: string;
+}

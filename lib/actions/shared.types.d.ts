@@ -106,3 +106,13 @@ export interface IGetQuestionsByTagId {
   pageSize?: number;
   searchQuery?: string;
 }
+
+export interface IGetUserInfoParams {
+  userId: string;
+}
+
+export interface IGetUserQuestions {
+  userId: string;
+  page?: number;
+  pageSize?: number;
+}

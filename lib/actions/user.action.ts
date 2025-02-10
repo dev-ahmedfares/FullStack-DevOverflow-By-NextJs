@@ -6,6 +6,8 @@ import {
   ICreateUserParams,
   IGetAllUsersParams,
   IGetSavedQuestionsParams,
+  IGetUserInfoParams,
+  IGetUserQuestions,
   IToggleSaveQuestionParams,
   IUpdateUserParams,
 } from "./shared.types";
@@ -13,6 +15,7 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
+import Answer from "@/database/answer.model";
 
 export async function getAllUsers(params: IGetAllUsersParams) {
   try {
@@ -171,6 +174,50 @@ export async function getSavedQuestions(params: IGetSavedQuestionsParams) {
     // TODO pagination NEXT
 
     return { questions: savedQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserInfo(params: IGetUserInfoParams) {
+  try {
+    connectToDatabase();
+
+    const { userId } = params;
+
+    const userInfo = await User.findOne({ clerkId: userId });
+    if (!userInfo) {
+      throw new Error("User not found");
+    }
+
+    const totalQuestions = await Question.countDocuments({
+      author: userInfo._id,
+    });
+    const totalAnswers = await Answer.countDocuments({ author: userInfo._id });
+
+    return { userInfo, totalQuestions, totalAnswers };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserQuestions(params: IGetUserQuestions) {
+  try {
+    connectToDatabase();
+
+    const { userId, page = 1, pageSize = 10 } = params;
+
+    const totalQuestions = await Question.countDocuments({ author: userId });
+
+    const userQuestions = await  Question.find({ author: userId })
+      .sort({ createdAt: -1, views: -1, upvotes: -1 })
+      .populate("tag", "_id name")
+      .populate("author", "clerkId _id name username");
+
+
+      return {userQuestions,totalQuestions}
   } catch (error) {
     console.log(error);
     throw error;

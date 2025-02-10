@@ -14,7 +14,7 @@ type TProps = {
     picture: string;
   };
   upvotes: number[];
-  views: number[];
+  views: number;
   answers: Array<object>;
   createdAt: Date;
   clerkId?: string | null;

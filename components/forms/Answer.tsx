@@ -39,7 +39,7 @@ function Answer({ questionId, authorId, question }: Props) {
   });
 
   const handleAddAnswer = async (values: z.infer<typeof AnswerSchema>) => {
-    console.log(questionId);
+    
     setIsSubmitting(true);
     try {
       await createAnswer({

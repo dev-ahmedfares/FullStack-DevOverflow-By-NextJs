@@ -78,7 +78,7 @@ export default function MobileSidebar() {
 
 const NavContent = () => {
   const pathname = usePathname();
-  console.log(pathname);
+  
   return (
     <section className="flex h-full flex-col gap-1">
       {sidebarLinks.map((link) => {

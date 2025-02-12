@@ -2,6 +2,8 @@ import Link from "next/link";
 import RenderTag from "../shared/RenderTag";
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
 import Metric from "../shared/Metric";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 type TProps = {
   _id: string;
@@ -22,6 +24,7 @@ type TProps = {
 
 export default function QuestionCard({
   _id,
+  clerkId,
   answers,
   author,
   createdAt,
@@ -30,9 +33,11 @@ export default function QuestionCard({
   upvotes,
   views,
 }: TProps) {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
+
   return (
     <div className="card-wrapper dark:dark-gradient rounded-[10px] p-9 sm:px-11">
-      <div>
+      <div className="flex flex-col-reverse  items-start justify-between sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 mb-1 line-clamp-1 block lg:hidden">
             {getTimestamp(createdAt)}
@@ -44,7 +49,11 @@ export default function QuestionCard({
           </Link>
         </div>
 
-        {/* TODO : if sign-in edit delete actions */}
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
 
       <div className="mt-3.5 flex flex-wrap gap-2">

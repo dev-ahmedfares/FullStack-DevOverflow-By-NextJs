@@ -116,3 +116,18 @@ export interface IGetUserQuestions {
   page?: number;
   pageSize?: number;
 }
+
+export interface IGetUserAnswers {
+  userId: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface IDeleteQuestionProps {
+  questionId: string;
+  path: string;
+}
+export interface IDeleteAnswerProps {
+  answerId: string;
+  path: string;
+}

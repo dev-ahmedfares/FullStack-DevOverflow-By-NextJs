@@ -3,12 +3,15 @@ import Question from "@/database/question.model";
 import { connectToDatabase } from "../mongoose";
 import {
   ICreateQuestionParams,
+  IDeleteQuestionProps,
   IGetQuestionById,
   IVoteQuestionParams,
 } from "./shared.types";
 import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export const createQuestion = async (params: ICreateQuestionParams) => {
   try {
@@ -169,3 +172,23 @@ export const downVoteQuestion = async (params: IVoteQuestionParams) => {
     throw error;
   }
 };
+
+export async function deleteQuestion(params: IDeleteQuestionProps) {
+  try {
+    const { questionId, path } = params;
+
+    await Question.deleteOne({ _id: questionId });
+    await Answer.deleteMany({ question: questionId });
+    await Interaction.deleteMany({ question: questionId });
+    await Tag.updateMany(
+      { question: questionId },
+      { $pull: { questions: questionId } },
+    );
+
+    revalidatePath(path);
+    // TODO check for tags not delete why?""
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

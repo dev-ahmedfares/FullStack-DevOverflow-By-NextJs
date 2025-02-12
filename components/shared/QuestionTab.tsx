@@ -10,8 +10,7 @@ interface Props {
 
 async function QuestionTab({ userId, clerkId }: Props) {
   const { userQuestions, totalQuestions } = await getUserQuestions({ userId });
-  
-    console.log(userQuestions)
+
   return (
     <>
       {userQuestions?.length > 0 ? (
@@ -27,11 +26,12 @@ async function QuestionTab({ userId, clerkId }: Props) {
               title={item.title}
               upvotes={item.upvotes}
               views={item.views}
+              clerkId={clerkId}
             />
           ))}
 
           {/* <div className="mt-10"> */}
-            {/* <Pagination pageNumber={pageNumber} isNext={isNextQuestion} /> */}
+          {/* <Pagination pageNumber={pageNumber} isNext={isNextQuestion} /> */}
           {/* </div> */}
         </>
       ) : (

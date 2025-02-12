@@ -6,6 +6,7 @@ import {
   ICreateUserParams,
   IGetAllUsersParams,
   IGetSavedQuestionsParams,
+  IGetUserAnswers,
   IGetUserInfoParams,
   IGetUserQuestions,
   IToggleSaveQuestionParams,
@@ -211,13 +212,29 @@ export async function getUserQuestions(params: IGetUserQuestions) {
 
     const totalQuestions = await Question.countDocuments({ author: userId });
 
-    const userQuestions = await  Question.find({ author: userId })
+    const userQuestions = await Question.find({ author: userId })
       .sort({ createdAt: -1, views: -1, upvotes: -1 })
-      .populate("tag", "_id name")
-      .populate("author", "clerkId _id name username");
+      .populate("tags", "_id name")
+      .populate("author", "clerkId _id name username picture");
 
+    return { userQuestions, totalQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
-      return {userQuestions,totalQuestions}
+export async function getUserAnswers(params: IGetUserAnswers) {
+  try {
+    const { userId, page = 1, pageSize = 10 } = params;
+
+    const totalAnswers = await Answer.countDocuments({ author: userId });
+    const userAnswers = await Answer.find({ author: userId })
+      .sort({ createdAt: -1, upvotes: -1 })
+      .populate("question", "_id title")
+      .populate("author", "_id clerkId picture name");
+
+    return { totalAnswers, userAnswers };
   } catch (error) {
     console.log(error);
     throw error;

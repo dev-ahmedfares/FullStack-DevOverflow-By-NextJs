@@ -14,7 +14,7 @@ export default async function Collection() {
   if (!userId) redirect("/sign-in");
 
   const { questions } = await getSavedQuestions({ clerkId: userId });
-  console.log(questions)
+  
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>

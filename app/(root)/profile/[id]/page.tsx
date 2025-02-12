@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuestionTab from "@/components/shared/QuestionTab";
+import AnswerTab from "@/components/shared/AnswerTab";
 
 async function ProfileDetails({ params, searchParams }: URLProps) {
   const { id } = await params;
@@ -90,10 +91,12 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
               Answers
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="top-posts">
+          <TabsContent value="top-posts" className="mt-5 flex flex-col gap-5">
             <QuestionTab userId={userInfo._id} clerkId={id} />
           </TabsContent>
-          <TabsContent value="answers">Change your password here.</TabsContent>
+          <TabsContent value="answers" className="mt-5 flex flex-col gap-5">
+            <AnswerTab userId={userInfo._id} clerkId={id}/>
+          </TabsContent>
         </Tabs>
       </div>
     </>

@@ -4,6 +4,7 @@ import { connectToDatabase } from "../mongoose";
 import {
   ICreateQuestionParams,
   IDeleteQuestionProps,
+  IEditQuestion,
   IGetQuestionById,
   IVoteQuestionParams,
 } from "./shared.types";
@@ -186,7 +187,28 @@ export async function deleteQuestion(params: IDeleteQuestionProps) {
     );
 
     revalidatePath(path);
-    // TODO check for tags not delete why?""
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function editQuestion(params: IEditQuestion) {
+  try {
+    connectToDatabase();
+    const { path, questionId, title, content } = params;
+
+    const question = await Question.findById(questionId).populate("tags");
+    console.log("Quesssssss,q", question);
+    if (!question) {
+      throw new Error("No question found ");
+    }
+
+    question.title = title;
+    question.content = content;
+    await question.save();
+    
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;

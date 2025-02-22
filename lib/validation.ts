@@ -19,5 +19,28 @@ export const QuestionValidation = z.object({
 });
 
 export const AnswerSchema = z.object({
-  answer: z.string().min(100,{message:"Answer must be at least 100 characters"}),
+  answer: z
+    .string()
+    .min(100, { message: "Answer must be at least 100 characters" }),
+});
+
+export const ProfileSchema = z.object({
+  name: z
+    .string()
+    .min(5, { message: "Name must be at least 5 characters" })
+    .max(50, { message: "Name must be at most 50 characters" }),
+  username: z
+    .string()
+    .min(5, { message: "Username must be at least 5 characters" })
+    .max(50, { message: "Username must be at most 50 characters" }),
+  portfolioWebsite: z.string().url().or(z.literal("")).optional(),
+
+  location: z
+    .string()
+    .max(50, { message: "Username must be at most 50 characters" })
+    .optional(),
+  bio: z
+    .string()
+    .max(160, { message: "Username must be at most 160 characters" })
+    .optional(),
 });

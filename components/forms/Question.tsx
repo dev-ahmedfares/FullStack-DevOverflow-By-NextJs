@@ -22,16 +22,18 @@ import { QuestionValidation } from "@/lib/validation";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { useTheme } from "@/context/ThemeProvider";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function Question({
   mongoUserId,
   type,
+  questionData,
 }: {
   mongoUserId: string;
   type?: string;
+  questionData?: string;
 }) {
   const router = useRouter();
   const { mode } = useTheme();
@@ -39,12 +41,15 @@ export default function Question({
   const editorRef = useRef<TinyMCEEditor | null>(null);
   const pathname = usePathname();
 
+  const questionDetails = questionData && JSON.parse(questionData || "");
+  const groupTags = questionDetails?.tags.map((tag) => tag.name);
+
   const form = useForm<z.infer<typeof QuestionValidation>>({
     resolver: zodResolver(QuestionValidation),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: questionDetails?.title || "",
+      explanation: questionDetails?.content || "",
+      tags: groupTags || [],
     },
   });
 
@@ -52,15 +57,25 @@ export default function Question({
     setIsSubmitting(true);
 
     try {
-      await createQuestion({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
+      if (type === "Edit") {
+        await editQuestion({
+          questionId: questionDetails?._id,
+          title: values?.title,
+          content: values?.explanation,
+          path: pathname,
+        });
 
-      router.push("/");
+        router.push(`/question/${questionDetails._id}`)
+      } else {
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+        router.push("/");
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -166,7 +181,7 @@ export default function Question({
                     // @ts-ignore
                     (editorRef.current = editor)
                   }
-                  initialValue=""
+                  initialValue={questionDetails?.content || ""}
                   init={{
                     height: 350,
                     menubar: false,
@@ -206,7 +221,6 @@ export default function Question({
           )}
         />
 
-        {/* TODO : to make it can to remove or add tags at edit */}
         <FormField
           control={form.control}
           name="tags"
@@ -218,6 +232,7 @@ export default function Question({
               <FormControl>
                 <div>
                   <Input
+                    disabled={type === "Edit"}
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                     className="no-focus paragraph-regular light-border-2 background-light900_dark300 text-dark300_light700 min-h-[56px]"
                   />

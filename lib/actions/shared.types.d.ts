@@ -19,12 +19,7 @@ export interface ICreateUserParams {
 
 export interface IUpdateUserParams {
   clerkId: string;
-  userData: {
-    name: string;
-    username: string;
-    email: string;
-    picture: string;
-  };
+  userData: Partial<IUser>;
   path: string;
 }
 
@@ -130,4 +125,11 @@ export interface IDeleteQuestionProps {
 export interface IDeleteAnswerProps {
   answerId: string;
   path: string;
+}
+
+export interface IEditQuestion {
+  path: string;
+  title: string;
+  content: string;
+  questionId: string;
 }

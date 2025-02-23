@@ -1,6 +1,6 @@
-import { Link } from "lucide-react";
+
 import Image from "next/image";
-import { userInfo } from "os";
+import Link from "next/link";
 import React from "react";
 interface IProfileLink {
   imgUrl: string;

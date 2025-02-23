@@ -207,8 +207,23 @@ export async function editQuestion(params: IEditQuestion) {
     question.title = title;
     question.content = content;
     await question.save();
-    
+
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getTopQuestions() {
+  try {
+    connectToDatabase();
+
+    const topQuestions = await Question.find({})
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5);
+
+      return topQuestions
   } catch (error) {
     console.log(error);
     throw error;

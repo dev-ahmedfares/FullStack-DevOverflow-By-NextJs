@@ -20,6 +20,7 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
+        <div>
         <div className="flex w-full flex-col items-start gap-4 lg:flex-row">
           <Image
             className="rounded-full max-sm:mx-auto"
@@ -59,6 +60,8 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
               />
             </div>
           </div>
+
+        </div>
 
           {userInfo?.bio && (
             <p className="paragraph-regular text-dark400_light800 mt-8">

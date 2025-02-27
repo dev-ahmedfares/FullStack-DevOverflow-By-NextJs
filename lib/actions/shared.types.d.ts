@@ -100,6 +100,7 @@ export interface IGetQuestionsByTagId {
   page?: number;
   pageSize?: number;
   searchQuery?: string;
+  
 }
 
 export interface IGetUserInfoParams {
@@ -132,4 +133,9 @@ export interface IEditQuestion {
   title: string;
   content: string;
   questionId: string;
+}
+
+export interface IGetQuestionsParams {
+  searchQuery?:string
+  filter?:string
 }

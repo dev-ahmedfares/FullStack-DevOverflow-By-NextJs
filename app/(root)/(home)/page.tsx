@@ -2,10 +2,12 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilter from "@/components/Home/HomeFilter";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/PaginationComp";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filter";
 import { getQuestions } from "@/lib/actions/question.action";
+import { SearchParamsProps } from "@/types";
 import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
@@ -15,10 +17,15 @@ export const metadata: Metadata = {
   description: "Home page of DevOverflow",
 };
 
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const SearchParams = await searchParams;
 
-export default async function Home() {
-  const { questions } = await getQuestions();
-  
+  const { questions } = await getQuestions({
+    searchQuery: SearchParams?.q,
+    filter: SearchParams?.filter,
+  });
+
+  // TODO Recommendation
   return (
     <>
       <div className="flex flex-col-reverse justify-between sm:flex-row">
@@ -71,6 +78,10 @@ export default async function Home() {
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+
+      <div className="mt-10">
+        <Pagination pageNum={1} isNext={false} />
       </div>
     </>
   );

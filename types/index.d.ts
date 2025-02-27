@@ -15,6 +15,9 @@ export type URLProps = {
   searchParams: { [key: string]: string | undefined };
 };
 
+export type SearchParamsProps = {
+  searchParams: { [key: string]: string | undefined };
+};
 
 export interface ParamsProps {
   params: { id: string };

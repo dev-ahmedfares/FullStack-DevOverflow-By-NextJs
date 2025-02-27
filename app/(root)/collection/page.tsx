@@ -2,26 +2,30 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
-import {  QuestionFilters } from "@/constants/filter";
+import { QuestionFilters } from "@/constants/filter";
 import { getSavedQuestions } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-
-export default async function Collection() {
+export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();
 
   if (!userId) redirect("/sign-in");
+  const SearchParams = await searchParams;
+  const { questions } = await getSavedQuestions({
+    clerkId: userId,
+    searchQuery: SearchParams?.q,
+    filter: SearchParams?.filter,
+  });
 
-  const { questions } = await getSavedQuestions({ clerkId: userId });
-  
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-11 flex flex-1 justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
-          route="/"
+          route="/collection"
           placeholder="Search for questions"
           imgSrc="/assets/icons/search.svg"
           otherClasses="flex-1"
@@ -34,7 +38,7 @@ export default async function Collection() {
 
       <div className="mt-10 flex flex-col gap-6">
         {questions.length > 0 ? (
-          questions.map((item) => (
+          questions.map((item:any) => (
             <QuestionCard
               key={item._id}
               _id={item._id}

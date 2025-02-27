@@ -1,19 +1,23 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
-import { UserFilters } from "@/constants/filter";
+import { TagFilters, UserFilters } from "@/constants/filter";
 import { getAllTags } from "@/lib/actions/tag.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
 import React from "react";
 
-export default async function Page() {
-  const { tags } = await getAllTags({});
+export default async function Page({ searchParams }: SearchParamsProps) {
+  const SearchParams = await searchParams;
+  const { tags } = await getAllTags({
+    searchQuery: SearchParams?.q,
+    filter: SearchParams?.filter,
+  });
 
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
-
       <div className="mt-11 flex flex-1 justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
           route="/tags"
@@ -22,10 +26,12 @@ export default async function Page() {
           imgSrc="/assets/icons/search.svg"
           otherClasses="flex-1"
         />
+
         <Filter
-          filters={UserFilters}
+          filters={TagFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
+
       </div>
       <div className="mt-12 flex flex-wrap gap-4">
         {tags.length > 0 ? (

@@ -3,12 +3,17 @@ import Filter from "@/components/shared/Filter";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { UserFilters } from "@/constants/filter";
 import { getAllUsers } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
 import React from "react";
 
-export default async function Page() {
-  const { users } = await getAllUsers({});
+export default async function Page({ searchParams }: SearchParamsProps) {
+  const SearchParams = await searchParams;
+  const { users } = await getAllUsers({
+    searchQuery: SearchParams?.q,
+    filter: SearchParams?.filter,
+  });
 
   return (
     <>
@@ -31,7 +36,7 @@ export default async function Page() {
         {users.length > 0 ? (
           users.map((user) => <UserCard key={user._id} user={user} />)
         ) : (
-          <div className="flex h-[200px] flex-col items-center justify-center">
+          <div className="mx-auto flex h-[200px] flex-col items-center justify-center">
             <p className="h2-bold text-dark100_light900">No user yet</p>
             <Link
               href="/sign-up"

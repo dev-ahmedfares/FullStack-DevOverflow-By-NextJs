@@ -42,7 +42,7 @@ export default async function UserCard({ user }: UserCardProps) {
         {interactedTags.length > 0 ? (
           <div className="mt-4 flex gap-2">
             {interactedTags.map((tag) => (
-              <RenderTag _id={tag._id} key={tag._id} name={tag.name} />
+              <RenderTag withoutLink={true} _id={tag._id} key={tag._id} name={tag.name} />
             ))}
           </div>
         ) : (

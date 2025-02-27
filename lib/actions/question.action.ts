@@ -1,4 +1,5 @@
 "use server";
+import { FilterQuery } from "mongoose";
 import Question from "@/database/question.model";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -6,6 +7,7 @@ import {
   IDeleteQuestionProps,
   IEditQuestion,
   IGetQuestionById,
+  IGetQuestionsParams,
   IVoteQuestionParams,
 } from "./shared.types";
 import Tag from "@/database/tag.model";
@@ -70,17 +72,44 @@ export const createQuestion = async (params: ICreateQuestionParams) => {
   }
 };
 
-export const getQuestions = async () => {
+export const getQuestions = async (params: IGetQuestionsParams) => {
   try {
     connectToDatabase();
+    const { searchQuery, filter } = params;
 
-    const questions = await Question.find({})
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    let sortOptions = {};
+
+    switch (filter) {
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+
+      case "frequent":
+        sortOptions = { views: -1 };
+        break;
+      case "unanswered":
+        query.answers = { $size: 0 };
+        break;
+      default:
+        break;
+    }
+
+    const questions = await Question.find(query)
       .populate({
         path: "tags",
         model: Tag,
       })
       .populate({ path: "author", model: User })
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
 
     return { questions };
   } catch (error) {
@@ -223,7 +252,7 @@ export async function getTopQuestions() {
       .sort({ views: -1, upvotes: -1 })
       .limit(5);
 
-      return topQuestions
+    return topQuestions;
   } catch (error) {
     console.log(error);
     throw error;

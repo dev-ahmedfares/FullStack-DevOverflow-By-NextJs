@@ -1,17 +1,15 @@
 import QuestionCard from "@/components/cards/QuestionCard";
-import HomeFilter from "@/components/Home/HomeFilter";
-import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
 
-export default async function Page({ params, searchQuery }: URLProps) {
+export default async function Page({ params, searchParams }: URLProps) {
   const { id } = await params;
-    
-  const { tagTitle,questions } = await getQuestionsByTagId({
+  const SearchParams = await searchParams;
+  const { tagTitle, questions } = await getQuestionsByTagId({
     tagId: id,
-    searchQuery: searchQuery?.q,
+    searchQuery: SearchParams?.q
   });
 
   return (
@@ -20,7 +18,7 @@ export default async function Page({ params, searchQuery }: URLProps) {
 
       <div className="mt-11 flex flex-1 justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
-          route="/"
+          route={`/tags/${id}`}
           placeholder="Search for tags question"
           imgSrc="/assets/icons/search.svg"
           otherClasses="flex-1"

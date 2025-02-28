@@ -25,7 +25,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
     filter: SearchParams?.filter,
   });
 
-  // TODO Recommendation
+  // TODO implement Recommendation
   return (
     <>
       <div className="flex flex-col-reverse justify-between sm:flex-row">

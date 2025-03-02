@@ -38,7 +38,9 @@ export async function getTopInteractedTags(
 export async function getAllTags(params: IGetAllTagsParams) {
   try {
     connectToDatabase();
-    const { filter, searchQuery } = params;
+    const { filter, searchQuery, page = 1, pageSize = 20 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
     const query: FilterQuery<typeof Tag> = {};
 
     if (searchQuery) {
@@ -64,9 +66,15 @@ export async function getAllTags(params: IGetAllTagsParams) {
         break;
     }
 
-    const tags = await Tag.find(query).sort(sortOptions);
+    const tags = await Tag.find(query)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .sort(sortOptions);
 
-    return { tags };
+    const totalTags = await Tag.countDocuments(query);
+    const isNext = totalTags > skipAmount + tags.length;
+
+    return { tags, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -79,6 +87,7 @@ export async function getQuestionsByTagId(params: IGetQuestionsByTagId) {
 
     const { tagId, page = 1, pageSize = 10, searchQuery } = params;
 
+    const skipAmount = (page - 1) * pageSize;
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
     const tag = await Tag.findOne(tagFilter).populate({
@@ -87,6 +96,11 @@ export async function getQuestionsByTagId(params: IGetQuestionsByTagId) {
       match: searchQuery
         ? { title: { $regex: new RegExp(searchQuery, "i") } }
         : {},
+      options: {
+        skip: skipAmount,
+        limit: pageSize + 1,
+        sort: { createdAt: -1 },
+      },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
         { path: "author", model: User, select: "_id clerkId name picture" },
@@ -98,9 +112,13 @@ export async function getQuestionsByTagId(params: IGetQuestionsByTagId) {
     }
     const questions = tag.questions;
 
-    // TODO Pagination
+    const isNext = questions.length > pageSize;
 
-    return { tagTitle: tag.name, questions };
+    return {
+      tagTitle: tag.name,
+      questions: questions.slice(0, pageSize),
+      isNext,
+    };
   } catch (error) {
     console.log(error);
     throw error;

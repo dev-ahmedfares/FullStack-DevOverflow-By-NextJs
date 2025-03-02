@@ -41,12 +41,37 @@ export async function getAllAnswers(params: IGetAllAnswersParams) {
 
     const { questionId, page = 1, pageSize = 10, sortBy } = params;
 
-    const answers = await Answer.find({ question: questionId }).populate(
-      "author",
-      "_id clerkId name picture",
-    );
+    const skipAmount = (page - 1) * pageSize;
 
-    return { answers };
+    let sortOptions = {};
+
+    switch (sortBy) {
+      case "highestUpvotes":
+        sortOptions = { upvotes: -1 };
+        break;
+      case "lowestUpvotes":
+        sortOptions = { upvotes: 1 };
+        break;
+      case "recent":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "old":
+        sortOptions = { createdAt: 1 };
+        break;
+      default:
+        break;
+    }
+
+    const answers = await Answer.find({ question: questionId })
+      .limit(pageSize)
+      .skip(skipAmount)
+      .sort(sortOptions)
+      .populate("author", "_id clerkId name picture");
+
+    const totalAnswers = await Answer.countDocuments({ question: questionId });
+    const isNext = totalAnswers > skipAmount + answers.length;
+
+    return { answers, isNext };
   } catch (error) {
     console.log(error);
     throw error;

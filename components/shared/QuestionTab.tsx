@@ -1,16 +1,25 @@
 import { getUserQuestions } from "@/lib/actions/user.action";
 import QuestionCard from "../cards/QuestionCard";
 import NoResult from "./NoResult";
+import Pagination from "./PaginationComp";
 
 interface Props {
   userId: string;
   clerkId: string;
-  //   TODO add and use SearchProps
+  searchProps?: { [key: string]: string | undefined };
 }
 
-async function QuestionTab({ userId, clerkId }: Props) {
-  const { userQuestions, totalQuestions } = await getUserQuestions({ userId });
+async function QuestionTab({ userId, clerkId, searchProps }: Props) {
+  const { userQuestions,  isNextQuestion } =
+    await getUserQuestions({
+      userId,
+      page: searchProps?.pageForQuestions ? +searchProps?.pageForQuestions : 1,
+    });
 
+  const pageNumber = searchProps?.pageForQuestions ? +searchProps?.pageForQuestions : 1;
+
+  
+    
   return (
     <>
       {userQuestions?.length > 0 ? (
@@ -30,9 +39,9 @@ async function QuestionTab({ userId, clerkId }: Props) {
             />
           ))}
 
-          {/* <div className="mt-10"> */}
-          {/* <Pagination pageNumber={pageNumber} isNext={isNextQuestion} /> */}
-          {/* </div> */}
+          <div className="mt-10">
+            <Pagination forItem="Questions" pageNum={pageNumber} isNext={isNextQuestion} />
+          </div>
         </>
       ) : (
         <NoResult

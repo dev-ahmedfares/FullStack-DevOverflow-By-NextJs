@@ -11,11 +11,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswerTab from "@/components/shared/AnswerTab";
 
-async function ProfileDetails({ params, searchParams }: URLProps) {
+async function ProfileDetails({ params,searchParams }: URLProps) {
   const { id } = await params;
+  const SearchParams = await searchParams
   const { userInfo, totalQuestions, totalAnswers } = await getUserInfo({
     userId: id,
   });
+
+  
 
   return (
     <>
@@ -85,7 +88,7 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
       <Stats totalAnswer={totalAnswers} totalQuestions={totalQuestions} />
 
       <div className="mt-10 flex gap-10">
-        <Tabs defaultValue="top-posts" className="flex-1">
+        <Tabs   defaultValue="top-posts" className="flex-1">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
             <TabsTrigger className="tab" value="top-posts">
               Top Posts
@@ -95,10 +98,10 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="top-posts" className="mt-5 flex flex-col gap-5">
-            <QuestionTab userId={userInfo._id} clerkId={id} />
+            <QuestionTab searchProps={SearchParams} userId={userInfo._id} clerkId={id} />
           </TabsContent>
           <TabsContent value="answers" className="mt-5 flex flex-col gap-5">
-            <AnswerTab userId={userInfo._id} clerkId={id}/>
+            <AnswerTab searchProps={SearchParams} userId={userInfo._id} clerkId={id}/>
           </TabsContent>
         </Tabs>
       </div>

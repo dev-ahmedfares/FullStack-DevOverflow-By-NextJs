@@ -20,10 +20,13 @@ export const metadata: Metadata = {
 export default async function Home({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;
 
-  const { questions } = await getQuestions({
+  const { questions,isNext } = await getQuestions({
     searchQuery: SearchParams?.q,
     filter: SearchParams?.filter,
+    page: SearchParams?.page ? +SearchParams?.page : 1,
   });
+
+  const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
 
   // TODO implement Recommendation
   return (
@@ -81,7 +84,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       </div>
 
       <div className="mt-10">
-        <Pagination pageNum={1} isNext={false} />
+        <Pagination pageNum={pageNumber} isNext={isNext} />
       </div>
     </>
   );

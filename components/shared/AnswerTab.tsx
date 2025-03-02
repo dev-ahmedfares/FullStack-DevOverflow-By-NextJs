@@ -2,16 +2,22 @@ import { getUserAnswers } from "@/lib/actions/user.action";
 import React from "react";
 import AnswerCard from "../cards/AnswerCard";
 import NoResult from "./NoResult";
+import Pagination from "./PaginationComp";
 
 interface Props {
   userId: string;
   clerkId: string;
-  //   TODO add and use SearchProps
+  searchProps?: { [key: string]: string | undefined };
 }
 
-async function AnswerTab({ userId, clerkId }: Props) {
-  const { totalAnswers, userAnswers } = await getUserAnswers({ userId });
-  
+async function AnswerTab({ userId, clerkId, searchProps }: Props) {
+  const { userAnswers,isNext } = await getUserAnswers({
+    userId,
+    page: searchProps?.pageForAnswers ? +searchProps?.pageForAnswers : 1,
+  });
+
+  const pageNumber = searchProps?.pageForAnswers ? +searchProps?.pageForAnswers : 1;
+
   return (
     <>
       <>
@@ -19,7 +25,7 @@ async function AnswerTab({ userId, clerkId }: Props) {
           <>
             {userAnswers.map((item) => (
               <AnswerCard
-              key={item._id}
+                key={item._id}
                 clerkId={clerkId}
                 _id={item._id}
                 question={item.question}
@@ -28,9 +34,10 @@ async function AnswerTab({ userId, clerkId }: Props) {
                 createdAt={item.createdAt}
               />
             ))}
-            {/* <div className="mt-10"> */}
-            {/* <Pagination pageNumber={pageNumber} isNext={isNextQuestion} /> */}
-            {/* </div> */}
+
+            <div className="mt-10">
+              <Pagination forItem="Answers" pageNum={pageNumber} isNext={isNext} />
+            </div>
           </>
         ) : (
           <NoResult

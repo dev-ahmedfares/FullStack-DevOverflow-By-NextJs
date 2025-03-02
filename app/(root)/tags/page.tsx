@@ -1,7 +1,8 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/PaginationComp";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
-import { TagFilters, UserFilters } from "@/constants/filter";
+import { TagFilters } from "@/constants/filter";
 import { getAllTags } from "@/lib/actions/tag.action";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
@@ -10,10 +11,14 @@ import React from "react";
 
 export default async function Page({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;
-  const { tags } = await getAllTags({
+
+  const { tags,isNext } = await getAllTags({
     searchQuery: SearchParams?.q,
     filter: SearchParams?.filter,
+    page:SearchParams?.page ? +SearchParams?.page : 1
   });
+
+  const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
 
   return (
     <>
@@ -31,7 +36,6 @@ export default async function Page({ searchParams }: SearchParamsProps) {
           filters={TagFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
-
       </div>
       <div className="mt-12 flex flex-wrap gap-4">
         {tags.length > 0 ? (
@@ -66,6 +70,10 @@ export default async function Page({ searchParams }: SearchParamsProps) {
             />
           </div>
         )}
+      </div>
+
+      <div className="mt-10">
+        <Pagination pageNum={pageNumber} isNext={isNext} />
       </div>
     </>
   );

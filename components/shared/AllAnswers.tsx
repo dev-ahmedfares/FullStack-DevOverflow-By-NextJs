@@ -7,16 +7,22 @@ import Link from "next/link";
 import ParseHTML from "./ParseHTML";
 import { getTimestamp } from "@/lib/utils";
 import Votes from "./Votes";
+import Pagination from "./PaginationComp";
 
 interface Props {
   questionId: string;
   userId: string;
+  searchProps?: { [key: string]: string | undefined };
 }
 
-async function AllAnswers({ questionId,userId }: Props) {
-  const { answers } = await getAllAnswers({ questionId });
+async function AllAnswers({ questionId, userId, searchProps }: Props) {
+  const { answers,isNext } = await getAllAnswers({
+    questionId,
+    sortBy: searchProps?.filter,
+    page:searchProps?.page ? +searchProps?.page: 1
+  });
 
-  
+  const pageNumber = searchProps?.page ? +searchProps?.page: 1
 
   return (
     <div className="mt-11">
@@ -70,6 +76,9 @@ async function AllAnswers({ questionId,userId }: Props) {
             <ParseHTML data={answer.content} />
           </article>
         ))}
+      </div>
+      <div className="mt-10">
+        <Pagination pageNum={pageNumber} isNext={isNext} />
       </div>
     </div>
   );

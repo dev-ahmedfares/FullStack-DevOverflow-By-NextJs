@@ -138,4 +138,6 @@ export interface IEditQuestion {
 export interface IGetQuestionsParams {
   searchQuery?:string
   filter?:string
+  page?:number
+  pageSize?:number
 }

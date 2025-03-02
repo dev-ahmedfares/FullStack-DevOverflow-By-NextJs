@@ -1,5 +1,6 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/PaginationComp";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
@@ -7,10 +8,13 @@ import { URLProps } from "@/types";
 export default async function Page({ params, searchParams }: URLProps) {
   const { id } = await params;
   const SearchParams = await searchParams;
-  const { tagTitle, questions } = await getQuestionsByTagId({
+  const { tagTitle, questions,isNext } = await getQuestionsByTagId({
     tagId: id,
-    searchQuery: SearchParams?.q
+    searchQuery: SearchParams?.q,
+    page:SearchParams?.page ? +SearchParams?.page : 1
   });
+
+  const pageNumber = SearchParams?.page ? +SearchParams?.page : 1
 
   return (
     <>
@@ -50,6 +54,9 @@ export default async function Page({ params, searchParams }: URLProps) {
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination pageNum={pageNumber} isNext={isNext} />
       </div>
     </>
   );

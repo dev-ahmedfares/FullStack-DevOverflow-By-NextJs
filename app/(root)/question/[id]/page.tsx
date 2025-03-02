@@ -17,7 +17,7 @@ import Votes from "@/components/shared/Votes";
 
 async function Page({ params, searchParams }: URLProps) {
   const {id} = await params
-  
+  const SearchParams = await searchParams
   const { userId: clerkId } = await auth();
 
   // TODO if user not sign in what must happen??
@@ -106,7 +106,7 @@ async function Page({ params, searchParams }: URLProps) {
       </div>
 
       <div>
-        <AllAnswers questionId={id} userId={mongoUser._id} />
+        <AllAnswers searchProps={SearchParams} questionId={id} userId={mongoUser._id} />
       </div>
 
       <div>

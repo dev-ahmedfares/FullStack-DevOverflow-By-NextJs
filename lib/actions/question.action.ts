@@ -75,7 +75,9 @@ export const createQuestion = async (params: ICreateQuestionParams) => {
 export const getQuestions = async (params: IGetQuestionsParams) => {
   try {
     connectToDatabase();
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+
+    const skipAmount = (page - 1 ) * pageSize
 
     const query: FilterQuery<typeof Question> = {};
 
@@ -109,9 +111,15 @@ export const getQuestions = async (params: IGetQuestionsParams) => {
         model: Tag,
       })
       .populate({ path: "author", model: User })
-      .sort(sortOptions);
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize)
 
-    return { questions };
+      const totalQuestions = await Question.countDocuments(query)
+
+      const isNext = totalQuestions > skipAmount + questions.length
+
+    return { questions,isNext };
   } catch (error) {
     console.log(error);
     throw error;

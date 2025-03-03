@@ -25,7 +25,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
     filter: SearchParams?.filter,
     page: SearchParams?.page ? +SearchParams?.page : 1,
   });
-
+  
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
 
   // TODO implement Recommendation

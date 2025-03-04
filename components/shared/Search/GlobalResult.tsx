@@ -4,50 +4,60 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { globalSearch } from "@/lib/actions/global.action";
 
 function GlobalResult() {
-  const searchParams = useSearchParams()
-  const [isLoading,setIsLoading]= useState(false)
-  const [result, setResult] = useState([
-    {
-      type: "question",
-      id: 1,
-      title: "nextjs",
-    },
-    {
-      type: "tag",
-      id: 1,
-      title: "nextjs tag",
-    },
-    {
-      type: "user",
-      id: 1,
-      title: "nextjs user",
-    },
-  ]);
+  const searchParams = useSearchParams();
+  // May make issus  show loading after no results second
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState([]);
 
-  const global = searchParams.get("global")
-  const type = searchParams.get("type")
+  const global = searchParams.get("global");
+  const type = searchParams.get("type");
 
-  useEffect(()=>{
-    const fetchResult = async ()=>{
-      setResult([])
-      setIsLoading(true)
+  useEffect(() => {
+    const fetchResult = async () => {
+      setResult([]);
+      setIsLoading(true);
       try {
-        // Fetch here
-      } catch (error) {
-        console.log(error)
-        throw error
-      } finally { 
-        setIsLoading(false)
-      }
-    } 
+        const results = await globalSearch({
+          query: global,
+          type,
+        });
 
-    if (global){
-      fetchResult()
+        setResult(JSON.parse(results));
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (global) {
+      fetchResult();
     }
-  },[global,type])
-  
+  }, [global, type]);
+
+  const renderLink = (type: string, id: string) => {
+    switch (type) {
+      case "question":
+        return `/question/${id}`;
+
+      case "answer":
+        return `/question/${id}`;
+
+      case "tag":
+        return `/tags/${id}`;
+
+      case "user":
+        return `/profile/${id}`;
+
+      default:
+        return "/";
+    }
+  };
+
   return (
     <div className="absolute z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400">
       <div className="text-dark400_light900 paragraph-semibold px-5">
@@ -66,11 +76,12 @@ function GlobalResult() {
         ) : (
           <div className="flex flex-col gap-2">
             {result.length > 0 ? (
-              result.map((item: any) => (
+              result.map((item: any,idx) => (
                 <Link
                   className="flex w-full cursor-pointer items-start gap-3 px-5 py-2.5 hover:bg-light-700/50 dark:hover:bg-dark-500/50"
-                  key={item.type + item.id}
-                  href={""}
+                  key={item.type + item.id + idx}
+                  href={renderLink(item.type, item.id)}
+                  onClick={()=> setResult([])}
                 >
                   <Image
                     width={18}

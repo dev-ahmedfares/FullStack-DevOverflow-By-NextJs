@@ -141,3 +141,8 @@ export interface IGetQuestionsParams {
   page?:number
   pageSize?:number
 }
+
+export interface IGlobalSearchParams {
+  query?:string | null,
+  type?:string | null
+}

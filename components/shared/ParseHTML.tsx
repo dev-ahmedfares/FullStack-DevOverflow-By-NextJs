@@ -36,7 +36,9 @@ function ParseHTML({ data }: Props) {
   }, []);
 
   return (
-    <div className="markdown w-full min-w-full ">{parse(data)}</div>
+    <div className="markdown w-full min-w-full !break-words contain-inline-size">
+      {parse(data)}
+    </div>
   );
 }
 

@@ -34,7 +34,7 @@ function Votes({
 }: Props) {
   const pathname = usePathname();
   const router = useRouter();
-  console.log(router);
+
   const handleSave = async () => {
     await toggleSaveQuestion({
       path: pathname,
@@ -98,7 +98,7 @@ function Votes({
       questionId: JSON.parse(itemId),
     });
   }, [pathname, router, userId, itemId]);
-  
+
   return (
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">

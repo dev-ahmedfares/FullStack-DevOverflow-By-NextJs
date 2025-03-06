@@ -46,14 +46,14 @@ export default function GlobalSearch() {
         router.push(newUrl, { scroll: false });
       } else {
         // may be add if (query)
-        // if (query) {
+        if (query) {
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
             keysToRemove: ["global", "type"],
           });
 
           router.push(newUrl, { scroll: false });
-        
+      }
       }
 
       return () => clearTimeout(debounceFn);

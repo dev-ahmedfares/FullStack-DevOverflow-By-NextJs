@@ -15,6 +15,7 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
+import path from "path";
 
 export const createQuestion = async (params: ICreateQuestionParams) => {
   try {
@@ -61,9 +62,16 @@ export const createQuestion = async (params: ICreateQuestionParams) => {
       $push: { tags: { $each: tagsDocuments } },
     });
 
-    // TODO create a interaction record for the user's ask question action
+    //  create a interaction record for the user's ask question action
+    await Interaction.create({
+      user: author,
+      question: question._id,
+      action: "ask-question",
+      tags: tagsDocuments,
+    });
 
-    // TODO increment author reputation by +5 points for creating a question
+    //  increment author reputation by +5 points for creating a question
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
 
     revalidatePath(path);
   } catch (error) {
@@ -77,7 +85,7 @@ export const getQuestions = async (params: IGetQuestionsParams) => {
     connectToDatabase();
     const { searchQuery, filter, page = 1, pageSize = 10 } = params;
 
-    const skipAmount = (page - 1 ) * pageSize
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Question> = {};
 
@@ -113,13 +121,13 @@ export const getQuestions = async (params: IGetQuestionsParams) => {
       .populate({ path: "author", model: User })
       .sort(sortOptions)
       .skip(skipAmount)
-      .limit(pageSize)
+      .limit(pageSize);
 
-      const totalQuestions = await Question.countDocuments(query)
+    const totalQuestions = await Question.countDocuments(query);
 
-      const isNext = totalQuestions > skipAmount + questions.length
+    const isNext = totalQuestions > skipAmount + questions.length;
 
-    return { questions,isNext };
+    return { questions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -172,7 +180,14 @@ export const upVoteQuestion = async (params: IVoteQuestionParams) => {
       throw new Error("No question found");
     }
 
-    // TODO add reputation for user points +/-
+    //  add reputation for user points +/-
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasUpVoted ? -2 : 2 },
+    });
+
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasUpVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
@@ -200,9 +215,20 @@ export const downVoteQuestion = async (params: IVoteQuestionParams) => {
       updateQuery = { $addToSet: { downvotes: userId } };
     }
 
-    await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
+    const questionObject = await Question.findByIdAndUpdate(
+      questionId,
+      updateQuery,
+      { new: true },
+    );
 
-    // TODO add reputation for user points +/-
+    //  add reputation for user points +/-
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasDownVoted ? -2 : 2 },
+    });
+
+    await User.findByIdAndUpdate(questionObject.author, {
+      $inc: { reputation: hasDownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
@@ -236,7 +262,7 @@ export async function editQuestion(params: IEditQuestion) {
     const { path, questionId, title, content } = params;
 
     const question = await Question.findById(questionId).populate("tags");
-    console.log("Quesssssss,q", question);
+
     if (!question) {
       throw new Error("No question found ");
     }

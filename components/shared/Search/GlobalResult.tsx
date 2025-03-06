@@ -40,10 +40,9 @@ function GlobalResult() {
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
+    console.log(type,"Inside render link");
     switch (type) {
       case "question":
-        return `/question/${id}`;
-
       case "answer":
         return `/question/${id}`;
 
@@ -57,7 +56,7 @@ function GlobalResult() {
         return "/";
     }
   };
-
+  console.log(result, "resulttttttttttttttttttttt");
   return (
     <div className="absolute z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400">
       <div className="text-dark400_light900 paragraph-semibold px-5">
@@ -76,12 +75,12 @@ function GlobalResult() {
         ) : (
           <div className="flex flex-col gap-2">
             {result.length > 0 ? (
-              result.map((item: any,idx) => (
+              result.map((item: any, idx) => (
                 <Link
                   className="flex w-full cursor-pointer items-start gap-3 px-5 py-2.5 hover:bg-light-700/50 dark:hover:bg-dark-500/50"
                   key={item.type + item.id + idx}
                   href={renderLink(item.type, item.id)}
-                  onClick={()=> setResult([])}
+                  
                 >
                   <Image
                     width={18}

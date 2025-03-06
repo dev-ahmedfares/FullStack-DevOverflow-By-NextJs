@@ -17,6 +17,8 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import Answer from "@/database/answer.model";
+import { BadgeCriteriaType } from "@/types";
+import { assignBadges } from "../utils";
 
 export async function getAllUsers(params: IGetAllUsersParams) {
   try {
@@ -258,7 +260,52 @@ export async function getUserInfo(params: IGetUserInfoParams) {
     });
     const totalAnswers = await Answer.countDocuments({ author: userInfo._id });
 
-    return { userInfo, totalQuestions, totalAnswers };
+    const [questionUpVotes] = await Question.aggregate([
+      {
+        $match: { author: userInfo._id },
+      },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+
+      { $group: { _id: null, totalVotesQuestion: { $sum: "$upvotes" } } },
+    ]);
+
+    const [answerUpVotes] = await Answer.aggregate([
+      { $match: { author: userInfo._id } },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalVotesAnswer: { $sum: "$upvotes" } } },
+    ]);
+
+    const [questionViews] = await Question.aggregate([
+      { $match: { author: userInfo._id } },
+      { $group: { _id: null, totalViews: { $sum: "$views" } } },
+    ]);
+
+    const criteria = [
+      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+      {
+        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+        count: questionUpVotes?.totalUpvotes || 0,
+      },
+      {
+        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+        count: answerUpVotes?.totalVotesAnswer || 0,
+      },
+      {
+        type: "TOTAL_VIEWS" as BadgeCriteriaType,
+        count: questionViews?.totalViews || 0,
+      },
+    ];
+    
+    const badgeCounts = assignBadges({ criteria });
+
+    return {
+      userInfo,
+      badgeCounts,
+      totalQuestions,
+      totalAnswers,
+      reputation: userInfo.reputation,
+    };
   } catch (error) {
     console.log(error);
     throw error;
@@ -304,10 +351,9 @@ export async function getUserAnswers(params: IGetUserAnswers) {
       .populate("question", "_id title")
       .populate("author", "_id clerkId picture name");
 
-      const isNext = totalAnswers > skipAmount + userAnswers.length;
+    const isNext = totalAnswers > skipAmount + userAnswers.length;
 
-
-    return {  userAnswers,isNext };
+    return { userAnswers, isNext };
   } catch (error) {
     console.log(error);
     throw error;

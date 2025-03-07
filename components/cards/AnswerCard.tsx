@@ -1,6 +1,8 @@
 import { getTimestamp, getFormattedNumber } from "@/lib/utils";
 import Metric from "../shared/Metric";
 import Link from "next/link";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 
 interface Props {
@@ -28,9 +30,10 @@ function AnswerCard({
   upvotes,
   createdAt,
 }: Props) {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
   return (
     <div className="card-wrapper dark:dark-gradient rounded-[10px] p-9 sm:px-11">
-      <div>
+      <div className="flex flex-col-reverse  items-start justify-between sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 mb-1 line-clamp-1 block lg:hidden">
             {getTimestamp(createdAt)}
@@ -42,7 +45,11 @@ function AnswerCard({
           </Link>
         </div>
 
-        {/* TODO : if sign-in edit delete actions */}
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
 
       <div className="flex-between mt-6 flex w-full flex-wrap items-center gap-3">

@@ -40,7 +40,7 @@ function GlobalResult() {
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
-    console.log(type,"Inside render link");
+    
     switch (type) {
       case "question":
       case "answer":
@@ -56,7 +56,7 @@ function GlobalResult() {
         return "/";
     }
   };
-  console.log(result, "resulttttttttttttttttttttt");
+  
   return (
     <div className="absolute z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400">
       <div className="text-dark400_light900 paragraph-semibold px-5">

@@ -146,3 +146,15 @@ export interface IGlobalSearchParams {
   query?:string | null,
   type?:string | null
 }
+
+export interface IGetRecommendedQuestionsParams {
+  userId:string
+  searchQuery?:string,
+  page?:number,
+  pageSize?:number,
+}
+
+export interface JobFilterParams {
+  query: string;
+  page: string;
+}

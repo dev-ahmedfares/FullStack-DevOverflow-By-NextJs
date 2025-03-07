@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Interaction from "@/database/interaction.model";
 import User from "@/database/user.model";
+import { getErrorMessage } from "../utils";
 
 export async function createAnswer(params: ICreateAnswerProps) {
   try {
@@ -40,8 +41,7 @@ export async function createAnswer(params: ICreateAnswerProps) {
 
     revalidatePath(path);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -83,8 +83,7 @@ export async function getAllAnswers(params: IGetAllAnswersParams) {
 
     return { answers, isNext };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -135,8 +134,7 @@ export async function upVoteAnswer(params: IAnswerVoteParams) {
 
     revalidatePath(path);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -188,8 +186,7 @@ export async function downVoteAnswer(params: IAnswerVoteParams) {
 
     revalidatePath(path);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -211,8 +208,8 @@ export async function deleteAnswer(params: IDeleteAnswerProps) {
     await Interaction.deleteMany({ answer: answerId });
 
     revalidatePath(path);
+    return { success: "Answer Deleted" };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }

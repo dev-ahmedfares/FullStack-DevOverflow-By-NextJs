@@ -1,3 +1,4 @@
+import CustomToaster from "@/components/shared/CustomToaster";
 import LeftSidebar from "@/components/shared/LeftSidebar";
 import Navbar from "@/components/shared/Navbar/Navbar";
 import RightSidebar from "@/components/shared/RightSidebar";
@@ -14,6 +15,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
         </section>
         <RightSidebar />
       </div>
+      <CustomToaster/>
     </main>
   );
 }

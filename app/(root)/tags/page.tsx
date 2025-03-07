@@ -6,8 +6,8 @@ import { TagFilters } from "@/constants/filter";
 import { getAllTags } from "@/lib/actions/tag.action";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
-
 import React from "react";
+
 
 export default async function Page({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;

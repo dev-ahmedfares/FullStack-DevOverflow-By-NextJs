@@ -4,6 +4,7 @@ import { deleteQuestion } from "@/lib/actions/question.action";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "sonner";
 
 interface Props {
   itemId: string;
@@ -12,17 +13,36 @@ interface Props {
 
 function EditDeleteAction({ itemId, type }: Props) {
   const pathname = usePathname();
-  const router = useRouter()
-  
+  const router = useRouter();
+
   const handleEdit = async () => {
-    router.push(`/question/edit/${JSON.parse(itemId)}`)
+    router.push(`/question/edit/${JSON.parse(itemId)}`);
   };
 
   const handleDelete = async () => {
     if (type === "Question") {
-      await deleteQuestion({ questionId: JSON.parse(itemId), path: pathname });
+      const res = await deleteQuestion({
+        questionId: JSON.parse(itemId),
+        path: pathname,
+      });
+
+      if (res?.error) {
+        toast.error(res?.error);
+      } else {
+        toast.success(res?.success);
+      }
+      
     } else if (type === "Answer") {
-      await deleteAnswer({ answerId: JSON.parse(itemId), path: pathname });
+      const res = await deleteAnswer({
+        answerId: JSON.parse(itemId),
+        path: pathname,
+      });
+
+      if (res?.error) {
+        toast.error(res?.error);
+      } else {
+        toast.success(res?.success);
+      }
     }
   };
 

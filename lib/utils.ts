@@ -4,6 +4,22 @@ import queryString from "query-string";
 import { BADGE_CRITERIA } from "@/constants";
 import { BadgeCounts } from "@/types";
 
+export const getErrorMessage = (error: unknown): string => {
+  let message: string;
+
+  if (error instanceof Error) {
+    message = error.message;
+  } else if (error && typeof error === "object" && "message" in error) {
+    message = String(error.message);
+  } else if (typeof error === "string") {
+    message = error;
+  } else {
+    message = "Something went wrong";
+  }
+
+  return message;
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -115,5 +131,36 @@ export function assignBadges(params: IBadgeParams) {
     });
   });
 
-  return badgeCounts
+  return badgeCounts;
+}
+
+
+export function processJobTitle(title: string | undefined | null): string {
+  // Check if title is undefined or null
+  if (title === undefined || title === null) {
+    return 'No Job Title';
+  }
+
+  // Split the title into words
+  const words = title.split(' ');
+
+  // Filter out undefined or null and other unwanted words
+  const validWords = words.filter((word) => {
+    return (
+      word !== undefined &&
+      word !== null &&
+      word.toLowerCase() !== 'undefined' &&
+      word.toLowerCase() !== 'null'
+    );
+  });
+
+  // If no valid words are left, return the general title
+  if (validWords.length === 0) {
+    return 'No Job Title';
+  }
+
+  // Join the valid words to create the processed title
+  const processedTitle = validWords.join(' ');
+
+  return processedTitle;
 }

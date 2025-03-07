@@ -4,6 +4,7 @@ import { connectToDatabase } from "../mongoose";
 import { IViewsQuestionParams } from "./shared.types";
 import Question from "@/database/question.model";
 import Interaction from "@/database/interaction.model";
+import { getErrorMessage } from "../utils";
 
 export async function viewsQuestion(params: IViewsQuestionParams) {
   try {
@@ -11,13 +12,14 @@ export async function viewsQuestion(params: IViewsQuestionParams) {
     const { userId, questionId } = params;
 
     // update view count for the question
-    await Question.findByIdAndUpdate(questionId, { $inc: { views: 1 } });
+   const question=  await Question.findByIdAndUpdate(questionId, { $inc: { views: 1 } });
 
     if (userId) {
       const existingInteraction = await Interaction.findOne({
         user: userId,
         action: "view",
         question: questionId,
+        tags:question.tags
       });
 
       if (existingInteraction) {
@@ -29,12 +31,12 @@ export async function viewsQuestion(params: IViewsQuestionParams) {
         user: userId,
         action: "view",
         question: questionId,
+        tags:question.tags
       });
     }
 
    
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }

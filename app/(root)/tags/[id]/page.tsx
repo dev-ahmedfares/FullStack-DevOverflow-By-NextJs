@@ -5,6 +5,7 @@ import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
 
+
 export default async function Page({ params, searchParams }: URLProps) {
   const { id } = await params;
   const SearchParams = await searchParams;
@@ -15,7 +16,7 @@ export default async function Page({ params, searchParams }: URLProps) {
   });
 
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1
-
+ 
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">{tagTitle}</h1>

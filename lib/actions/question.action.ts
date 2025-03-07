@@ -8,6 +8,7 @@ import {
   IEditQuestion,
   IGetQuestionById,
   IGetQuestionsParams,
+  IGetRecommendedQuestionsParams,
   IVoteQuestionParams,
 } from "./shared.types";
 import Tag from "@/database/tag.model";
@@ -15,7 +16,7 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
-import path from "path";
+import { getErrorMessage } from "../utils";
 
 export const createQuestion = async (params: ICreateQuestionParams) => {
   try {
@@ -74,9 +75,9 @@ export const createQuestion = async (params: ICreateQuestionParams) => {
     await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
 
     revalidatePath(path);
+    
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 };
 
@@ -129,10 +130,72 @@ export const getQuestions = async (params: IGetQuestionsParams) => {
 
     return { questions, isNext };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 };
+
+export async function getRecommendedQuestions(
+  params: IGetRecommendedQuestionsParams,
+) {
+  try {
+    const { userId, page = 1, pageSize = 10, searchQuery } = params;
+
+    const skipAmount = (page - 1) * pageSize;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      throw new Error("No User Found");
+    }
+
+    const userInteractions = await Interaction.find({ user: user._id })
+      .populate("tags")
+      .exec();
+
+    const userTags = userInteractions.reduce((tags, interaction) => {
+      if (interaction.tags) {
+        tags = tags.concat(interaction.tags);
+      }
+
+      return tags;
+    }, []);
+
+    const distinctUserTagsId = [
+      ...new Set(userTags.map((item: any) => item._id)),
+    ];
+
+    // To get only question that related the tag id and also
+    // make sure the current user not create this question
+
+    const query: FilterQuery<typeof Question> = {
+      $and: [
+        { tags: { $in: distinctUserTagsId } },
+        { author: { $ne: user._id } },
+      ],
+    };
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const totalQuestions = await Question.countDocuments(query);
+
+    const recommendedQuestions = await Question.find(query)
+      .populate("tags")
+      .populate("author")
+      .skip(skipAmount)
+      .limit(pageSize);
+
+    const isNext = totalQuestions > skipAmount + recommendedQuestions.length;
+
+    return { isNext, questions: recommendedQuestions };
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
+}
 
 export const getQuestionById = async ({ questionId }: IGetQuestionById) => {
   try {
@@ -148,8 +211,7 @@ export const getQuestionById = async ({ questionId }: IGetQuestionById) => {
 
     return question;
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 };
 
@@ -191,8 +253,7 @@ export const upVoteQuestion = async (params: IVoteQuestionParams) => {
 
     revalidatePath(path);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 };
 
@@ -232,8 +293,7 @@ export const downVoteQuestion = async (params: IVoteQuestionParams) => {
 
     revalidatePath(path);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 };
 
@@ -245,14 +305,15 @@ export async function deleteQuestion(params: IDeleteQuestionProps) {
     await Answer.deleteMany({ question: questionId });
     await Interaction.deleteMany({ question: questionId });
     await Tag.updateMany(
-      { question: questionId },
+      { questions: questionId },
       { $pull: { questions: questionId } },
     );
 
     revalidatePath(path);
+
+    return { success: "Question Deleted" };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -262,7 +323,7 @@ export async function editQuestion(params: IEditQuestion) {
     const { path, questionId, title, content } = params;
 
     const question = await Question.findById(questionId).populate("tags");
-
+   
     if (!question) {
       throw new Error("No question found ");
     }
@@ -272,9 +333,9 @@ export async function editQuestion(params: IEditQuestion) {
     await question.save();
 
     revalidatePath(path);
+    
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -288,7 +349,6 @@ export async function getTopQuestions() {
 
     return topQuestions;
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }

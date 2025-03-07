@@ -9,6 +9,8 @@ import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
+
+
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();
 
@@ -22,9 +24,10 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
     filter: SearchParams?.filter,
     page:SearchParams?.page ? +SearchParams?.page : 1
   });
-
+  
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1
 
+  
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>

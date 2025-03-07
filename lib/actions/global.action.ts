@@ -6,6 +6,7 @@ import { IGlobalSearchParams } from "./shared.types";
 import User from "@/database/user.model";
 import Answer from "@/database/answer.model";
 import Tag from "@/database/tag.model";
+import { getErrorMessage } from "../utils";
 
 export async function globalSearch(params: IGlobalSearchParams) {
   try {
@@ -76,10 +77,9 @@ export async function globalSearch(params: IGlobalSearchParams) {
         })),
       );
     }
-    
-    return JSON.stringify(results)
+
+    return JSON.stringify(results);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }

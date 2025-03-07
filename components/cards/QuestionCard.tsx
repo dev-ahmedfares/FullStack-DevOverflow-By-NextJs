@@ -38,12 +38,12 @@ export default function QuestionCard({
   return (
     <div className="card-wrapper dark:dark-gradient rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse  items-start justify-between sm:flex-row">
-        <div>
+        <div className="flex-1 w-full">
           <span className="subtle-regular text-dark400_light700 mb-1 line-clamp-1 block lg:hidden">
             {getTimestamp(createdAt)}
           </span>
-          <Link href={`/question/${_id}`}>
-            <h3 className="text-dark200_light900 sm:h3-semibold base-semibold line-clamp-1 flex-1">
+          <Link href={`/question/${_id}`} className="w-full">
+            <h3 className="text-dark200_light900 sm:h3-semibold base-semibold w-full line-clamp-1 flex-1 break-words contain-inline-size">
               {title}
             </h3>
           </Link>

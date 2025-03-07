@@ -25,6 +25,7 @@ import { useTheme } from "@/context/ThemeProvider";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Question({
   mongoUserId,
@@ -58,26 +59,36 @@ export default function Question({
 
     try {
       if (type === "Edit") {
-        await editQuestion({
+        const res = await editQuestion({
           questionId: questionDetails?._id,
           title: values?.title,
           content: values?.explanation,
           path: pathname,
         });
+        
 
-        router.push(`/question/${questionDetails._id}`)
+        if (res?.error) {
+          return toast.error(res?.error);
+        } else {
+          toast.success("Question Edited Successfully");
+          router.push(`/question/${questionDetails._id}`);
+        }
       } else {
-        await createQuestion({
+        const res = await createQuestion({
           title: values.title,
           content: values.explanation,
           tags: values.tags,
           author: JSON.parse(mongoUserId),
           path: pathname,
         });
-        router.push("/");
+
+        if (res?.error) {
+          return toast.error(res?.error);
+        } else {
+          toast.success("Question Created Successfully");
+          router.push("/");
+        }
       }
-    } catch (error) {
-      console.log(error);
     } finally {
       setIsSubmitting(false);
     }

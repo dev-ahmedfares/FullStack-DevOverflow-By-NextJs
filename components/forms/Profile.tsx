@@ -19,6 +19,7 @@ import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { updateUser } from "@/lib/actions/user.action";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Props {
   clerkId: string;
@@ -44,12 +45,19 @@ function Profile({ clerkId, user }: Props) {
     try {
       setIsSubmitting(true);
 
-      await updateUser({ clerkId, userData: values, path: pathname });
+      const res = await updateUser({
+        clerkId,
+        userData: values,
+        path: pathname,
+      });
 
-      router.back();
-    } catch (error) {
-      console.log(error);
-    } finally {
+      if (res?.error) {
+        toast.error(res?.error);
+      } else {
+        toast.success("Profile Updated");
+        router.back();
+      }
+    }  finally {
       setIsSubmitting(false);
     }
   };

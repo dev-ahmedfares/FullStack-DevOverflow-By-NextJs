@@ -18,7 +18,7 @@ import Tag from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import Answer from "@/database/answer.model";
 import { BadgeCriteriaType } from "@/types";
-import { assignBadges } from "../utils";
+import { assignBadges, getErrorMessage } from "../utils";
 
 export async function getAllUsers(params: IGetAllUsersParams) {
   try {
@@ -68,8 +68,7 @@ export async function getAllUsers(params: IGetAllUsersParams) {
 
     return { users, isNext };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -82,8 +81,7 @@ export async function getUserById(params: { id: string }) {
 
     return user;
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -95,24 +93,22 @@ export async function createUser(userData: ICreateUserParams) {
 
     return mongoUser;
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
 export async function updateUser(userData: IUpdateUserParams) {
   try {
     connectToDatabase();
-    await User.findOneAndUpdate(
+    const res = await User.findOneAndUpdate(
       { clerkId: userData.clerkId },
       userData.userData,
       { new: true },
     );
-
+    
     revalidatePath(userData.path);
   } catch (error) {
-    console.log(error);
-    throw error;
+   return { error: getErrorMessage(error) }
   }
 }
 
@@ -143,8 +139,7 @@ export async function deleteUser(clerkId: string) {
 
     return deletedUser;
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) }
   }
 }
 
@@ -178,8 +173,7 @@ export async function toggleSaveQuestion(params: IToggleSaveQuestionParams) {
 
     revalidatePath(path);
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -239,8 +233,7 @@ export async function getSavedQuestions(params: IGetSavedQuestionsParams) {
 
     return { questions: savedQuestions.slice(0, pageSize), isNext };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -307,8 +300,7 @@ export async function getUserInfo(params: IGetUserInfoParams) {
       reputation: userInfo.reputation,
     };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -332,8 +324,7 @@ export async function getUserQuestions(params: IGetUserQuestions) {
 
     return { userQuestions, isNextQuestion };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -355,7 +346,6 @@ export async function getUserAnswers(params: IGetUserAnswers) {
 
     return { userAnswers, isNext };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { error: getErrorMessage(error) };
   }
 }

@@ -6,8 +6,12 @@ import Pagination from "@/components/shared/PaginationComp";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filter";
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
+import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
@@ -19,16 +23,32 @@ export const metadata: Metadata = {
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;
+  const { userId } = await auth();
 
-  const { questions,isNext } = await getQuestions({
-    searchQuery: SearchParams?.q,
-    filter: SearchParams?.filter,
-    page: SearchParams?.page ? +SearchParams?.page : 1,
-  });
-  
+  let results;
+  if (SearchParams?.filter === "recommended") {
+    if (userId) {
+      results = await getRecommendedQuestions({
+        userId,
+        searchQuery: SearchParams?.q,
+        page: SearchParams?.page ? +SearchParams?.page : 1,
+      });
+    } else {
+      results = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else {
+    results = await getQuestions({
+      searchQuery: SearchParams?.q,
+      filter: SearchParams?.filter,
+      page: SearchParams?.page ? +SearchParams?.page : 1,
+    });
+  }
+
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
 
-  // TODO implement Recommendation
   return (
     <>
       <div className="flex flex-col-reverse justify-between sm:flex-row">
@@ -57,8 +77,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       <HomeFilter />
 
       <div className="mt-10 flex flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((item) => (
+        {results?.questions.length > 0 ? (
+          results?.questions.map((item) => (
             <QuestionCard
               key={item._id}
               _id={item._id}
@@ -84,7 +104,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       </div>
 
       <div className="mt-10">
-        <Pagination pageNum={pageNumber} isNext={isNext} />
+        <Pagination pageNum={pageNumber} isNext={results?.isNext} />
       </div>
     </>
   );

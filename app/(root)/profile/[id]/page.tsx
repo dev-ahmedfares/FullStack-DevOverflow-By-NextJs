@@ -14,15 +14,16 @@ import AnswerTab from "@/components/shared/AnswerTab";
 async function ProfileDetails({ params, searchParams }: URLProps) {
   const { id } = await params;
   const SearchParams = await searchParams;
-  const { userInfo, totalQuestions, totalAnswers,badgeCounts,reputation } = await getUserInfo({
-    userId: id,
-  });
+  const { userInfo, totalQuestions, totalAnswers, badgeCounts, reputation } =
+    await getUserInfo({
+      userId: id,
+    });
 
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
-        <div>
-          <div className="flex w-full flex-col items-start gap-4 lg:flex-row">
+        <div className="w-full">
+          <div className="flex w-full flex-col items-start gap-4 max-sm:mx-auto lg:flex-row">
             <Image
               className="rounded-full max-sm:mx-auto"
               src={userInfo?.picture}
@@ -82,7 +83,12 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
         </div>
       </div>
 
-      <Stats badgeCounts={badgeCounts} reputation={reputation} totalAnswer={totalAnswers} totalQuestions={totalQuestions} />
+      <Stats
+        badgeCounts={badgeCounts}
+        reputation={reputation}
+        totalAnswer={totalAnswers}
+        totalQuestions={totalQuestions}
+      />
 
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">

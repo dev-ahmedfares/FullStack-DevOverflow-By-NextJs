@@ -8,6 +8,7 @@ import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
 import React from "react";
+import Loading from "./loading";
 
 export default async function Page({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;
@@ -19,7 +20,8 @@ export default async function Page({ searchParams }: SearchParamsProps) {
   });
 
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
-
+ 
+  
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Users</h1>

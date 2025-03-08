@@ -18,7 +18,7 @@ export type URLProps = {
 };
 
 export type SearchParamsProps = {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
 export interface ParamsProps {

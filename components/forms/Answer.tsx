@@ -137,7 +137,7 @@ function Answer({ questionId, authorId, question }: Props) {
                     onBlur={field.onBlur}
                     onEditorChange={(content) => field.onChange(content)}
                     onInit={(evt, editor) =>
-                      // @ts-ignore
+                      // @ts-expect-error
                       (editorRef.current = editor)
                     }
                     initialValue=""

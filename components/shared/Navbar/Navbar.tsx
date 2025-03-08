@@ -1,6 +1,8 @@
-import { 
+import {
   // SignedOut, SignInButton,
-   SignedIn, UserButton } from "@clerk/nextjs";
+  SignedIn,
+  UserButton,
+} from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,8 +12,8 @@ import MobileSidebar from "./MobileSidebar";
 
 export default function Navbar() {
   return (
-    <nav className="flex-between fixed w-full background-light900_dark200 p-6 sm:px-12  shadow-light-300 dark:shadow-none z-50">
-      <Link href={"/"} className="flex gap-1 items-center ">
+    <nav className="flex-between background-light900_dark200 fixed z-50 w-full p-6 shadow-light-300 dark:shadow-none sm:px-12">
+      <Link href={"/"} className="flex items-center gap-1">
         <Image
           src={"./assets/images/site-logo.svg"}
           width={23}
@@ -23,11 +25,10 @@ export default function Navbar() {
         </p>
       </Link>
 
-      <GlobalSearch/>
-
+      <GlobalSearch />
 
       <div className="flex gap-3">
-      <Theme/>
+        <Theme />
 
         <SignedIn>
           <UserButton
@@ -42,10 +43,8 @@ export default function Navbar() {
           />
         </SignedIn>
 
-      <MobileSidebar/>
-      
+        <MobileSidebar />
       </div>
-
     </nav>
   );
 }

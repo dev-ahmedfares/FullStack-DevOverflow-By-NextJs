@@ -17,11 +17,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-
 export default function MobileSidebar() {
-  
   return (
-    <Sheet >
+    <Sheet>
       <SheetTrigger asChild>
         <Image
           src="/assets/icons/hamburger.svg"

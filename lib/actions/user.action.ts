@@ -100,7 +100,7 @@ export async function createUser(userData: ICreateUserParams) {
 export async function updateUser(userData: IUpdateUserParams) {
   try {
     connectToDatabase();
-    const res = await User.findOneAndUpdate(
+     await User.findOneAndUpdate(
       { clerkId: userData.clerkId },
       userData.userData,
       { new: true },

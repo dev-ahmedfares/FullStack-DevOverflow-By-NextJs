@@ -136,10 +136,10 @@ function Answer({ questionId, authorId, question }: Props) {
                     apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                     onBlur={field.onBlur}
                     onEditorChange={(content) => field.onChange(content)}
-                    onInit={(evt, editor) =>
-                      // @ts-expect-error: Type mismatch when assigning TinyMCE editor instance
-                      (editorRef.current = editor)
-                    }
+                    onInit={(evt, editor) => {
+                      
+                      editorRef.current = editor as TinyMCEEditor;
+                    }}
                     initialValue=""
                     init={{
                       height: 350,

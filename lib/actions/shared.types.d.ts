@@ -154,7 +154,3 @@ export interface IGetRecommendedQuestionsParams {
   pageSize?:number,
 }
 
-export interface JobFilterParams {
-  query: string;
-  page: string;
-}

@@ -7,8 +7,8 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Edit Question | Dev Overflow",
-  description: "Edit question page of Dev Overflow",
+  title: "Edit Question | DevOverflow",
+  description: "Edit question page of DevOverflow",
 };
 
 async function EditQuestion({params}: ParamsProps) {

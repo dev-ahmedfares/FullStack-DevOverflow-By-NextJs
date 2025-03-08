@@ -12,6 +12,13 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/actions/user.action";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
+import { Metadata } from "next";
+
+
+export const metadata:Metadata = {
+  title:"Question details | DevOverflow",
+  description:"Question details page of DevOverflow"
+}
 
 async function Page({ params, searchParams }: URLProps) {
   const { id } = await params;

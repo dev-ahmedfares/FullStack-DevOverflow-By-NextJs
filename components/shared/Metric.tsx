@@ -3,7 +3,7 @@ import Link from "next/link";
 
 type TProps = {
   imgUrl: string;
-  title: string;
+  title?: string;
   alt: string;
   value: number | string;
   textStyles: string;

@@ -7,9 +7,13 @@ import { QuestionFilters } from "@/constants/filter";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-
+export const metadata:Metadata = {
+  title:"Collections | DevOverflow",
+  description:"Collections page of DevOverflow"
+}
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();

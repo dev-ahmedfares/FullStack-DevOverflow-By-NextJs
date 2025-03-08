@@ -5,10 +5,13 @@ import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { UserFilters } from "@/constants/filter";
 import { getAllUsers } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
+import { Metadata } from "next";
 import Link from "next/link";
 
-import React from "react";
-import Loading from "./loading";
+export const metadata:Metadata = {
+  title:"Community | DevOverflow",
+  description:"Community page of DevOverflow"
+}
 
 export default async function Page({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;
@@ -40,7 +43,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
         />
       </div>
       <div className="mt-12 flex flex-wrap gap-4">
-        {users.length > 0 ? (
+        {users && users?.length > 0 ? (
           users.map((user) => <UserCard key={user._id} user={user} />)
         ) : (
           <div className="mx-auto flex h-[200px] flex-col items-center justify-center">

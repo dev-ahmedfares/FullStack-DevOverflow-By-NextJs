@@ -6,8 +6,8 @@ import { redirect } from "next/navigation";
 
 
 export const metadata: Metadata = {
-  title: "Edit Profile | Dev Overflow",
-  description: "Edit profile page of Dev Overflow",
+  title: "Edit Profile | DevOverflow",
+  description: "Edit profile page of DevOverflow",
 };
 
 async function EditProfile() {

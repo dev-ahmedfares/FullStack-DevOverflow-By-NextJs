@@ -4,19 +4,24 @@ import Pagination from "@/components/shared/PaginationComp";
 import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Tag | DevOverflow",
+  description: "Tag page of DevOverflow",
+};
 
 export default async function Page({ params, searchParams }: URLProps) {
   const { id } = await params;
   const SearchParams = await searchParams;
-  const { tagTitle, questions,isNext } = await getQuestionsByTagId({
+  const { tagTitle, questions, isNext } = await getQuestionsByTagId({
     tagId: id,
     searchQuery: SearchParams?.q,
-    page:SearchParams?.page ? +SearchParams?.page : 1
+    page: SearchParams?.page ? +SearchParams?.page : 1,
   });
 
-  const pageNumber = SearchParams?.page ? +SearchParams?.page : 1
- 
+  const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">{tagTitle}</h1>
@@ -32,7 +37,7 @@ export default async function Page({ params, searchParams }: URLProps) {
 
       <div className="mt-10 flex flex-col gap-6">
         {questions.length > 0 ? (
-          questions.map((item) => (
+          questions.map((item:any) => (
             <QuestionCard
               key={item._id}
               _id={item._id}

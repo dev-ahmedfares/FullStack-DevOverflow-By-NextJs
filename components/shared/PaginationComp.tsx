@@ -3,16 +3,23 @@ import { formUrlQuery } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 
-function Pagination({ pageNum, isNext,forItem }: { pageNum: number; isNext: boolean,forItem?:string  }) {
+function Pagination({
+  pageNum,
+  isNext = false,
+  forItem,
+}: {
+  pageNum: number;
+  isNext?: boolean;
+  forItem?: string;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const handleNavigation = (direction: "prev" | "next") => {
-    
     const nextPageNum = direction === "prev" ? pageNum - 1 : pageNum + 1;
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
-      key: forItem ? `pageFor${forItem}` : "page"  ,
+      key: forItem ? `pageFor${forItem}` : "page",
       value: nextPageNum.toString(),
     });
 
@@ -20,7 +27,7 @@ function Pagination({ pageNum, isNext,forItem }: { pageNum: number; isNext: bool
   };
 
   if (!isNext && pageNum === 1) return null;
-  
+
   return (
     <div className="flex w-full items-center justify-center gap-2">
       <Button

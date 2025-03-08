@@ -5,9 +5,14 @@ import LocalSearch from "@/components/shared/Search/LocalSearch";
 import { TagFilters } from "@/constants/filter";
 import { getAllTags } from "@/lib/actions/tag.action";
 import { SearchParamsProps } from "@/types";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
+export const metadata: Metadata = {
+  title: 'Tags | DevOverflow',
+  description: 'Tags page of DevOverflow'
+};
 
 export default async function Page({ searchParams }: SearchParamsProps) {
   const SearchParams = await searchParams;
@@ -38,7 +43,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
         />
       </div>
       <div className="mt-12 flex flex-wrap gap-4">
-        {tags.length > 0 ? (
+        {tags && tags?.length > 0 ? (
           tags.map((tag) => (
             <Link
               href={`/tags/${tag._id}`}

@@ -77,7 +77,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       <HomeFilter />
 
       <div className="mt-10 flex flex-col gap-6">
-        {results?.questions.length > 0 ? (
+        {results?.questions && results?.questions.length > 0 ? (
           results?.questions.map((item) => (
             <QuestionCard
               key={item._id}

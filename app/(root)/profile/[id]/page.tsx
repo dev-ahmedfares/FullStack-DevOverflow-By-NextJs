@@ -10,6 +10,12 @@ import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswerTab from "@/components/shared/AnswerTab";
+import { Metadata } from "next";
+
+export const metadata:Metadata = {
+  title:"Profile | DevOverflow",
+  description:"Profile page of DevOverflow"
+}
 
 async function ProfileDetails({ params, searchParams }: URLProps) {
   const { id } = await params;
@@ -86,8 +92,8 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
       <Stats
         badgeCounts={badgeCounts}
         reputation={reputation}
-        totalAnswer={totalAnswers}
-        totalQuestions={totalQuestions}
+        totalAnswer={totalAnswers || 0}
+        totalQuestions={totalQuestions || 0}
       />
 
       <div className="mt-10 flex gap-10">

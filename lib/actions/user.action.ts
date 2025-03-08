@@ -324,7 +324,9 @@ export async function getUserQuestions(params: IGetUserQuestions) {
 
     return { userQuestions, isNextQuestion };
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    console.log(error);
+    // return { error: getErrorMessage(error) };
+    return { userQuestions: [], isNextQuestion: false };
   }
 }
 

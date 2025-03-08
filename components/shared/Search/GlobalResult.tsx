@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { globalSearch } from "@/lib/actions/global.action";
+import { toast } from "sonner";
 
 function GlobalResult() {
   const searchParams = useSearchParams();
@@ -20,15 +21,18 @@ function GlobalResult() {
       setResult([]);
       setIsLoading(true);
       try {
+        // ts-ignore
         const results = await globalSearch({
           query: global,
           type,
         });
 
-        setResult(JSON.parse(results));
-      } catch (error) {
-        console.log(error);
-        throw error;
+        if (typeof results !== "string" && results?.error) {
+          toast.error(results?.error);
+        } else if (typeof results === "string") {
+          setResult(JSON.parse(results));
+        }
+
       } finally {
         setIsLoading(false);
       }
@@ -40,7 +44,6 @@ function GlobalResult() {
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
-    
     switch (type) {
       case "question":
       case "answer":
@@ -56,7 +59,7 @@ function GlobalResult() {
         return "/";
     }
   };
-  
+
   return (
     <div className="absolute z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400">
       <div className="text-dark400_light900 paragraph-semibold px-5">
@@ -80,7 +83,6 @@ function GlobalResult() {
                   className="flex w-full cursor-pointer items-start gap-3 px-5 py-2.5 hover:bg-light-700/50 dark:hover:bg-dark-500/50"
                   key={item.type + item.id + idx}
                   href={renderLink(item.type, item.id)}
-                  
                 >
                   <Image
                     width={18}

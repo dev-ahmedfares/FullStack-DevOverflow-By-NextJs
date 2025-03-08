@@ -137,7 +137,7 @@ function Answer({ questionId, authorId, question }: Props) {
                     onBlur={field.onBlur}
                     onEditorChange={(content) => field.onChange(content)}
                     onInit={(evt, editor) =>
-                      // @ts-expect-error
+                      // @ts-expect-error: Type mismatch when assigning TinyMCE editor instance
                       (editorRef.current = editor)
                     }
                     initialValue=""

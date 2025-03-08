@@ -19,7 +19,7 @@ export default function GlobalSearch() {
     const handleClickOutside = (e: any) => {
       if (
         searchContainerRef.current &&
-        // @ts-expect-error
+        // @ts-expect-error: Type mismatch 
         !searchContainerRef.current.contains(e.target)
       ) {
         setIsOpen(false);

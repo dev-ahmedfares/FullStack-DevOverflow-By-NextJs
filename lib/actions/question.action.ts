@@ -349,6 +349,8 @@ export async function getTopQuestions() {
 
     return topQuestions;
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    console.log(error)
+    // return { error: getErrorMessage(error) };
+    return []
   }
 }

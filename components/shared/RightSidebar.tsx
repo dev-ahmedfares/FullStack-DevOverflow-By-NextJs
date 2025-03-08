@@ -15,7 +15,7 @@ export default async function RightSidebar() {
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
         <div className="mt-7 flex flex-col gap-6">
-          {TopQuestions.map((question) => (
+          {TopQuestions?.map((question:any) => (
             <Link
               key={question._id}
               href={`/question/${question._id}`}

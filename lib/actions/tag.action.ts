@@ -149,6 +149,8 @@ export async function getTopPopularTags() {
 
     return TopPopularTags;
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    console.log(error)
+    // return { error: getErrorMessage(error) };
+    return []
   }
 }

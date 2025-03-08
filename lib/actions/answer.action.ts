@@ -82,8 +82,9 @@ export async function getAllAnswers(params: IGetAllAnswersParams) {
     const isNext = totalAnswers > skipAmount + answers.length;
 
     return { answers, isNext };
-  } catch (error) {
-    return { error: getErrorMessage(error) };
+  } catch {
+    // return { error: getErrorMessage(error) };
+    return { answers: [], isNext: false };
   }
 }
 

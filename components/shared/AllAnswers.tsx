@@ -34,7 +34,7 @@ async function AllAnswers({ questionId, userId, searchProps }: Props) {
       </div>
 
       <div>
-        {answers.map((answer) => (
+        {answers.map((answer:any) => (
           <article className="light-border border-b py-10" key={answer._id}>
             <div className="flex items-center justify-between">
               <div className="flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-between">

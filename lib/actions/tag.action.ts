@@ -12,6 +12,7 @@ import Question from "@/database/question.model";
 import { FilterQuery } from "mongoose";
 import { getErrorMessage } from "../utils";
 import Interaction from "@/database/interaction.model";
+import { error } from "console";
 
 export async function getTopInteractedTags(
   params: IGetTopInteractedTagsParams,
@@ -24,14 +25,13 @@ export async function getTopInteractedTags(
 
     if (!user) throw new Error("User not found");
 
-    
-     // Find interactions for the user and group by tags
-     const tagCountMap = await Interaction.aggregate([
+    // Find interactions for the user and group by tags
+    const tagCountMap = await Interaction.aggregate([
       { $match: { user: user._id, tags: { $exists: true, $ne: [] } } },
-      { $unwind: '$tags' },
-      { $group: { _id: '$tags', count: { $sum: 1 } } },
+      { $unwind: "$tags" },
+      { $group: { _id: "$tags", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
-      { $limit: limit }
+      { $limit: limit },
     ]);
 
     const topTags = tagCountMap.map((tagCount) => tagCount._id);
@@ -40,9 +40,10 @@ export async function getTopInteractedTags(
     const topTagDocuments = await Tag.find({ _id: { $in: topTags } });
     return topTagDocuments;
     
-  } catch  {
+  } catch (error) {
+    console.log(error);
     // return { error: getErrorMessage(error) };
-    return []
+    return [];
   }
 }
 

@@ -100,15 +100,15 @@ export async function createUser(userData: ICreateUserParams) {
 export async function updateUser(userData: IUpdateUserParams) {
   try {
     connectToDatabase();
-     await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { clerkId: userData.clerkId },
       userData.userData,
       { new: true },
     );
-    
+
     revalidatePath(userData.path);
   } catch (error) {
-   return { error: getErrorMessage(error) }
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -139,7 +139,7 @@ export async function deleteUser(clerkId: string) {
 
     return deletedUser;
   } catch (error) {
-    return { error: getErrorMessage(error) }
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -289,7 +289,7 @@ export async function getUserInfo(params: IGetUserInfoParams) {
         count: questionViews?.totalViews || 0,
       },
     ];
-    
+
     const badgeCounts = assignBadges({ criteria });
 
     return {
@@ -346,6 +346,8 @@ export async function getUserAnswers(params: IGetUserAnswers) {
 
     return { userAnswers, isNext };
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    console.log(error);
+    return { userAnswers: [], isNext: false };
+    // return { error: getErrorMessage(error) };
   }
 }

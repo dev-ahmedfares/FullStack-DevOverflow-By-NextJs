@@ -12,7 +12,7 @@ import Question from "@/database/question.model";
 import { FilterQuery } from "mongoose";
 import { getErrorMessage } from "../utils";
 import Interaction from "@/database/interaction.model";
-import { error } from "console";
+
 
 export async function getTopInteractedTags(
   params: IGetTopInteractedTagsParams,
@@ -39,7 +39,7 @@ export async function getTopInteractedTags(
     // find the tag documents for the top tags
     const topTagDocuments = await Tag.find({ _id: { $in: topTags } });
     return topTagDocuments;
-    
+
   } catch (error) {
     console.log(error);
     // return { error: getErrorMessage(error) };

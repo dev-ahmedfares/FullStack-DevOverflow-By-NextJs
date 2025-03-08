@@ -43,7 +43,7 @@ export default function Question({
   const pathname = usePathname();
 
   const questionDetails = questionData && JSON.parse(questionData || "");
-  const groupTags = questionDetails?.tags.map((tag) => tag.name);
+  const groupTags = questionDetails?.tags.map((tag: any) => tag.name);
 
   const form = useForm<z.infer<typeof QuestionValidation>>({
     resolver: zodResolver(QuestionValidation),
@@ -65,7 +65,6 @@ export default function Question({
           content: values?.explanation,
           path: pathname,
         });
-        
 
         if (res?.error) {
           return toast.error(res?.error);

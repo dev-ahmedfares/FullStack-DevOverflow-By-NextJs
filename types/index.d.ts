@@ -13,8 +13,8 @@ export type SidebarLinks = {
 };
 
 export type URLProps = {
-  params: { id: string };
-  searchParams: { [key: string]: string | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
 export type SearchParamsProps = {

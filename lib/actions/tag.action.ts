@@ -40,8 +40,9 @@ export async function getTopInteractedTags(
     const topTagDocuments = await Tag.find({ _id: { $in: topTags } });
     return topTagDocuments;
     
-  } catch (error) {
-    return { error: getErrorMessage(error) };
+  } catch  {
+    // return { error: getErrorMessage(error) };
+    return []
   }
 }
 

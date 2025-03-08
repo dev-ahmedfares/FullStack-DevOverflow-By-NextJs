@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import GlobalFilters from "./GlobalFilters";
 import { ReloadIcon } from "@radix-ui/react-icons";

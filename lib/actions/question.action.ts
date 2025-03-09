@@ -75,7 +75,6 @@ export const createQuestion = async (params: ICreateQuestionParams) => {
     await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
 
     revalidatePath(path);
-    
   } catch (error) {
     return { error: getErrorMessage(error) };
   }
@@ -304,13 +303,28 @@ export async function deleteQuestion(params: IDeleteQuestionProps) {
     await Question.deleteOne({ _id: questionId });
     await Answer.deleteMany({ question: questionId });
     await Interaction.deleteMany({ question: questionId });
-    await Tag.updateMany(
-      { questions: questionId },
-      { $pull: { questions: questionId } },
-    );
+    const tagsToCheck = await Tag.find({ questions: questionId });
+    //  await Tag.updateMany(
+    //   { questions: questionId },
+    //   { $pull: { questions: questionId } },
+    // );
 
+    for (const tag of tagsToCheck) {
+      if (
+        tag.questions.length === 1 &&
+        tag.questions[0].toString() === questionId.toString()
+      ) {
+        await Tag.deleteOne({ _id: tag._id });
+
+         
+      } else {
+        await Tag.updateMany(
+          { _id: tag._id },
+          { $pull: { questions: questionId } },
+        );
+      }
+    }
     revalidatePath(path);
-
     return { success: "Question Deleted" };
   } catch (error) {
     return { error: getErrorMessage(error) };
@@ -323,7 +337,7 @@ export async function editQuestion(params: IEditQuestion) {
     const { path, questionId, title, content } = params;
 
     const question = await Question.findById(questionId).populate("tags");
-   
+
     if (!question) {
       throw new Error("No question found ");
     }
@@ -333,7 +347,6 @@ export async function editQuestion(params: IEditQuestion) {
     await question.save();
 
     revalidatePath(path);
-    
   } catch (error) {
     return { error: getErrorMessage(error) };
   }
@@ -349,8 +362,8 @@ export async function getTopQuestions() {
 
     return topQuestions;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     // return { error: getErrorMessage(error) };
-    return []
+    return [];
   }
 }

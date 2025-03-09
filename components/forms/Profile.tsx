@@ -17,7 +17,7 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { updateUser } from "@/lib/actions/user.action";
-import { usePathname, useRouter } from "next/navigation";
+import {  usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface Props {
@@ -54,7 +54,7 @@ function Profile({ clerkId, user }: Props) {
         toast.error(res?.error);
       } else {
         toast.success("Profile Updated");
-        router.back();
+        router.push(`/profile/${clerkId}`);
       }
     }  finally {
       setIsSubmitting(false);

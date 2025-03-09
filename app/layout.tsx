@@ -7,13 +7,14 @@ import {
   // UserButton,
 } from "@clerk/nextjs";
 import "./globals.css";
-import "../styles/prism.css"
+import "../styles/prism.css";
 
-import React from "react";
+import React, { Suspense } from "react";
 
 import { Inter, Space_Grotesk } from "next/font/google";
 import { Metadata } from "next";
 import ThemeProvider from "@/context/ThemeProvider";
+import { Spinner } from "@/components/shared/Spinner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,13 +45,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
-        <ClerkProvider appearance={
-          {elements:{
-            formButtonPrimary:"primary-gradient ",
-            footerActionLink:"primary-text-gradient hover:text-primary-500"
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formButtonPrimary: "primary-gradient ",
+              footerActionLink: "primary-text-gradient hover:text-primary-500",
+            },
           }}
-        }>
-          <ThemeProvider>{children}</ThemeProvider>
+        >
+          <ThemeProvider>
+            <Suspense
+              fallback={
+                <div className="flex h-screen flex-col items-center justify-center">
+                  <p className="text-dark100_light900 flex items-center justify-center gap-1">
+                    <Spinner size={"small"} />
+                    Loading...
+                  </p>
+                </div>
+              }
+            >
+              {children}
+            </Suspense>
+          </ThemeProvider>
         </ClerkProvider>
       </body>
     </html>

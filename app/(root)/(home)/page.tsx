@@ -49,6 +49,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
 
+  
+
   return (
     <>
       <div className="flex flex-col-reverse justify-between sm:flex-row">

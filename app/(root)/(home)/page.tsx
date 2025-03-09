@@ -49,7 +49,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 
   const pageNumber = SearchParams?.page ? +SearchParams?.page : 1;
 
-  
+
 
   return (
     <>

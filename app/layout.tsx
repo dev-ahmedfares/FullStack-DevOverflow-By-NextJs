@@ -56,7 +56,7 @@ export default function RootLayout({
           <ThemeProvider>
             <Suspense
               fallback={
-                <div className="flex h-screen flex-col items-center justify-center">
+                <div className="background-light900_dark200 flex h-screen flex-col items-center justify-center">
                   <p className="text-dark100_light900 flex items-center justify-center gap-1">
                     <Spinner size={"small"} />
                     Loading...

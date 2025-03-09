@@ -11,7 +11,7 @@ import { toast } from "sonner";
 function GlobalResult() {
   const searchParams = useSearchParams();
   // May make issus  show loading after no results second
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState([]);
 
   const global = searchParams.get("global");

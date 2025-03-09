@@ -7,14 +7,15 @@ import {
 } from "@/lib/actions/question.action";
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import {  usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { undefined } from "zod";
+import { toast } from "sonner";
+
 
 interface Props {
   type: "Question" | "Answer";
   itemId: string;
-  userId: string;
+  userId?: string;
   upvotes: number;
   downvotes: number;
   hasUpVoted: boolean;
@@ -36,17 +37,18 @@ function Votes({
   const router = useRouter();
 
   const handleSave = async () => {
+    if (!userId) return toast.info("Sign in to be able to contribute");
+
     await toggleSaveQuestion({
       path: pathname,
       questionId: JSON.parse(itemId),
       userId: JSON.parse(userId),
     });
-
-    // TODO ADD Toast it save or not
   };
 
   const handleVote = async (action: string) => {
-    // TODO Check if sign in and show toast
+    if (!userId) return toast.info("Sign in to be able to contribute");
+
     if (type === "Question") {
       if (action === "upvote") {
         await upVoteQuestion({
@@ -87,7 +89,7 @@ function Votes({
       }
     }
 
-    // TODO Show toast message
+    
   };
 
   // TODO and the end of project i guess this useEffect must be in question/[id] page not here

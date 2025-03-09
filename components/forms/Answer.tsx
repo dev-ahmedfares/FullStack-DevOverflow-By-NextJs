@@ -18,10 +18,11 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 
 interface Props {
   questionId: string;
-  authorId: string;
+  authorId?: string | null;
   question: string;
 }
 
@@ -40,6 +41,8 @@ function Answer({ questionId, authorId, question }: Props) {
   });
 
   const handleAddAnswer = async (values: z.infer<typeof AnswerSchema>) => {
+    if (!authorId) return toast.info("Sign in to be able to add answer");
+
     setIsSubmitting(true);
     try {
       await createAnswer({
@@ -63,8 +66,8 @@ function Answer({ questionId, authorId, question }: Props) {
   };
 
   const handleGenerateAIAnswer = async () => {
-    // TODO may redirect user to sign in page
-    if (!authorId) return;
+    
+    if (!authorId) return toast.info("Sign in to be able to add answer");
 
     setIsGenerating(true);
     try {

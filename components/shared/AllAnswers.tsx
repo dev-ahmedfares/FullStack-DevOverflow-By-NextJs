@@ -11,7 +11,7 @@ import Pagination from "./PaginationComp";
 
 interface Props {
   questionId: string;
-  userId: string;
+  userId?: string | null;
   searchProps?: { [key: string]: string | undefined };
 }
 

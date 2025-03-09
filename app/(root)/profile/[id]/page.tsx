@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswerTab from "@/components/shared/AnswerTab";
 import { Metadata } from "next";
+import { auth } from "@clerk/nextjs/server";
 
 export const metadata:Metadata = {
   title:"Profile | DevOverflow",
@@ -19,6 +20,7 @@ export const metadata:Metadata = {
 
 async function ProfileDetails({ params, searchParams }: URLProps) {
   const { id } = await params;
+   const { userId:clerkId } = await auth();
   const SearchParams = await searchParams;
   const { userInfo, totalQuestions, totalAnswers, badgeCounts, reputation } =
     await getUserInfo({
@@ -78,7 +80,7 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
         </div>
         <div className="flex justify-end max-sm:mb-8 max-sm:w-full sm:mt-3">
           <SignedIn>
-            {id === userInfo?.clerkId && (
+            {clerkId === userInfo?.clerkId && (
               <Link href="/profile/edit">
                 <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3">
                   Edit profile
@@ -110,14 +112,14 @@ async function ProfileDetails({ params, searchParams }: URLProps) {
             <QuestionTab
               searchProps={SearchParams}
               userId={userInfo._id}
-              clerkId={id}
+              clerkId={clerkId}
             />
           </TabsContent>
           <TabsContent value="answers" className="mt-0 flex flex-col gap-5">
             <AnswerTab
               searchProps={SearchParams}
               userId={userInfo._id}
-              clerkId={id}
+              clerkId={clerkId}
             />
           </TabsContent>
         </Tabs>

@@ -6,7 +6,7 @@ import Pagination from "./PaginationComp";
 
 interface Props {
   userId: string;
-  clerkId: string;
+  clerkId?: string | null;
   searchProps?: { [key: string]: string | undefined };
 }
 

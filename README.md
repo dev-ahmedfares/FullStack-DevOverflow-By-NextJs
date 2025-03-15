@@ -36,7 +36,6 @@
 - View all tags and tag-related questions.
 - View and Edit your profile.
 - Built-in badge system for earning badges.
-- View, search jobs or filter by location.
 - Light and Dark Mode.
 
 
